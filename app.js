@@ -47,4 +47,15 @@ app.get('/tree', function(req, res){
   res.write(data);
   res.end();
 });
+
+app.post('/save', function(req, res){
+ var date = new Date();
+ var now = date.toFormat("YYYY/MM/DD HH24:MI:SS");
+ req.body.date = now;
+
+ // 項目の保存
+ db.save(now, req.body);
+  res.send(req.body);
+});
+
 app.listen(server);

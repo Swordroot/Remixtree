@@ -8,6 +8,11 @@ var ejs = require( 'ejs' );
 //サーバーの立ち上げ
 var http = require('http');
 
+var cfenv = require( 'cfenv' );
+var appEnv = cfenv.getAppEnv();
+
+port = appEnv.port;
+
 app.use(express.static(__dirname + '/public'));
 
 //指定したポートにきたリクエストを受け取れるようにする

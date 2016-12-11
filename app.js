@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 3000;
+//var port = process.env.PORT || 3000;
 
 var fs = require( 'fs' );
 var ejs = require( 'ejs' );
@@ -11,12 +11,31 @@ var http = require('http');
 var cfenv = require( 'cfenv' );
 var appEnv = cfenv.getAppEnv();
 
-port = appEnv.port;
-
 app.use(express.static(__dirname + '/public'));
 
+// Cloudant用アクセス・モジュール「cradle」設定
+var cradle = require('cradle');
+
+// Cloudant DB接続情報取得
+var services = JSON.parse(process.env.VCAP_SERVICES);
+var credentials = services['cloudantNoSQLDB'][0].credentials;
+var host = credentials.host;
+var port = credentials.port;
+var options = {
+ cache : true,
+ raw : false,
+ secure : true,
+ auth : {
+ username : credentials.username,
+ password : credentials.password
+ }
+};
+
+// データベース接続
+var db = new (cradle.Connection)(host, port, options).database('cldb');
+
 //指定したポートにきたリクエストを受け取れるようにする
-var server = http.createServer(app).listen(port, function () {
+var server = http.createServer(app).listen(appEnv.port, function () {
   console.log('Server listening at port %d', port);
 });
 

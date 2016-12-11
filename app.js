@@ -53,7 +53,7 @@ app.get('/tree', function(req, res){
 app.post('/save', function(req, res){
  var date = new Date();
  var now = date.toString();
- console.log(req);
+ req.body = JSON.stringify(req.body);
  req.body.date = now;
 
  // 項目の保存

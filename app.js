@@ -18,6 +18,8 @@ var cradle = require('cradle');
 
 // Cloudant DB接続情報取得
 var services = JSON.parse(process.env.VCAP_SERVICES);
+console.log(JSON.stringify(services));
+
 var credentials = services['cloudantNoSQLDB'][0].credentials;
 var host = credentials.host;
 var port = credentials.port;

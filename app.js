@@ -62,7 +62,7 @@ app.post('/save', function(req, res){
  req.body.date = now;
 
  // 項目の保存
- db.save(now, req.body);
+ db.save( req.body,function(err,res){});
   res.send(req.body);
 });
 //「全件削除」ボタンの id=removeAll, ui_item.jsの url:'/removeAll'でcall

@@ -19,7 +19,7 @@ $(function(){
  type: 'POST',
  data: JSON.stringify(param),
  contentType: 'application/json',
- url: '/',
+ url: '/save',
  success: function(data) {
  console.log('success add: ' + JSON.stringify(data));
  showTable(data);

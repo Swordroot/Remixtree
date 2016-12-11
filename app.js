@@ -13,6 +13,11 @@ var appEnv = cfenv.getAppEnv();
 
 app.use(express.static(__dirname + '/public'));
 
+//body-parser
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 // Cloudant用アクセス・モジュール「cradle」設定
 var cradle = require('cradle');
 
@@ -53,7 +58,7 @@ app.get('/tree', function(req, res){
 app.post('/save', function(req, res){
  var date = new Date();
  var now = date.toString();
- req.body = JSON.stringify(req.body);
+ res.setHeader('Content-Type', 'text/plain');
  req.body.date = now;
 
  // 項目の保存

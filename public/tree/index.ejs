@@ -83,7 +83,7 @@ function drawLink(d) {
 
 function drawNode(d) {
   var img = new Image();
-  img.src = "/images/tab.png";
+  img.src = d.image;
   context.moveTo(d.x + 3, d.y);
   context.drawImage(img, d.x, d.y);
   //context.arc(d.x, d.y, 3, 0, 2 * Math.PI);

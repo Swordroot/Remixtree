@@ -52,7 +52,7 @@ app.get('/tree', function(req, res){
 
 app.post('/save', function(req, res){
  var date = new Date();
- var now = date.toFormat("YYYY/MM/DD HH24:MI:SS");
+ var now = date.toString();
  req.body.date = now;
 
  // 項目の保存

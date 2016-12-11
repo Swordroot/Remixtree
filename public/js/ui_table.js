@@ -46,6 +46,7 @@ $(function() {
       contentType: 'application/json',
       url: '/getAll',
       success: function(rows) {
+      	console.log(JSON.stringify(rows));
         for (var i = 0; i < rows.length; i++) {
           console.log(' row ' + i + ": " + JSON.stringify(rows[i]));
           showTable(rows[i].value);

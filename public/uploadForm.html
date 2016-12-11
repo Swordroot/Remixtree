@@ -1,8 +1,33 @@
+<!DOCTYPE html>
 <html>
-<head>
 
-</head>
-<body>
-これで表示できるんですかね?
-</body>
+ <head>
+ <title>NodeJS Starter Application</title>
+ <meta charset="utf-8">
+ <!--ここから追加-->
+ <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+ <script type="text/javascript" src="js/ui_table.js"></script>
+ <!--ここまで追加-->
+ </head>
+
+ <body>
+ <!--ここから追加-->
+ <table id="dataTable" border="1">
+ <thead>
+ <tr><th>時間</th><th>項目</th></tr>
+ </thead>
+ <tbody id='tableItems'></tbody>
+ </table><br><br>
+
+ <div id="form">
+ <br>
+ <button value="全件表示" id="getAll"> 全件表示 </button>
+ <button value="全件削除" id="removeAll"> 全件削除 </button>
+ <br><br>
+ <span>項目名: </span><span><input type="text" id="item1"></span><br>
+ <button value="追加" id="add">追加</button>
+ </div>
+ <!--ここまで追加-->
+ </body>
+
 </html>

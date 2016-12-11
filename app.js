@@ -59,5 +59,39 @@ app.post('/save', function(req, res){
  db.save(now, req.body);
   res.send(req.body);
 });
+//「全件削除」ボタンの id=removeAll, ui_item.jsの url:'/removeAll'でcall
+app.post('/removeAll', function(req, res){
 
+ // 全件検索を、作成したview名 items_view にて実行
+ db.view('items/items_view', function (err, rows) {
+ if (!err) {
+ rows.forEach(function (id, row) {
+ db.remove(id);
+ console.log("removed key is: %s", id);
+ });
+ } else { console.log("app.js db.remove error: " + err); }
+
+ });
+
+ res.send({});
+});
+
+
+//「全件表示」ボタンの id=getAll, ui_item.jsの url:'/getAll'でcall
+app.post('/getAll', function(req, res){
+ returnTable(res);
+});
+
+var returnTable = function(res) {
+ // 全件検索を、作成したview名 items_view にて実行
+ db.view('items/items_view', function (err, rows) {
+ if (!err) {
+ rows.forEach(function (id, row) {
+ console.log("key: %s, row: %s", id, JSON.stringify(row));
+ });
+ } else { console.log("app.js returnTable error: " + err); }
+
+ res.send(rows);
+ });
+}
 app.listen(server);

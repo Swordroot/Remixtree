@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var port = process.env.PORT || 3000;
 
+var fs = require( 'fs' );
+var ejs = require( 'ejs' );
+
 //サーバーの立ち上げ
 var http = require('http');
 
@@ -11,6 +14,11 @@ var server = http.createServer(app).listen(port, function () {
 });
 
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/public/index.html');
+app.get('/tree', function(req, res){
+  var template = fs.readFileSync(__dirname + '/public/tree/index.ejs', 'utf-8');
+  var data = ejs.render(template, {});
+  
+  res.writeHead( 200, { 'Content-Type': 'text/html' } );
+  res.write(data);
+  res.end();
 });

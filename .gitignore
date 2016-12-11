@@ -1,1 +1,34 @@
-launchConfigurations/
+# Build directory
+/lib/
+
+# SDK build locations
+newlib/
+glibc/
+pnacl/
+emscripten/
+
+# The submodule
+!/emscripten/
+
+# emacs
+*~
+\#*\#
+.\#*
+
+# OSX
+.DS_Store
+
+node_modules
+bower_components
+lib-cov
+*.seed
+*.log
+*.out
+*.pid
+npm-debug.log
+.netbeans
+nbproject
+.idea
+.node_history
+
+launchConfigurations

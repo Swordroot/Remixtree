@@ -86,7 +86,7 @@ app.post('/removeAll', function(req, res){
 
 //「全件表示」ボタンの id=getAll, ui_item.jsの url:'/getAll'でcall
 app.post('/getAll', function(req, res){
- res.setHeader('Content-Type', 'text/plain');
+ //res.setHeader('Content-Type', 'text/plain');
  returnTable(res);
 });
 

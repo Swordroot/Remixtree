@@ -12,7 +12,8 @@
         "ejs": "*",
         "cfenv": "*",
         "nodemon": "*",
-        "cradle":"*"
+        "cradle":"*",
+        "body-parser":"*"
     },
     "scripts": {
         "start": "node app.js"

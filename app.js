@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 //指定したポートにきたリクエストを受け取れるようにする
 var server = http.createServer(app).listen(appEnv.port, function () {
-  console.log('Server listening at port %d', port);
+  console.log('Server listening at port %d', appEnv.port);
 });
 
 app.get('/tree', function(req, res){

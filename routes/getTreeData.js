@@ -29,19 +29,24 @@ var db = cloudant.db;
 
 router.post('/Test', function(req, res) {
 	//res.setHeader('Content-Type', 'text/plain');
-	returnTable(res);
+	res.send(getTreeJSON(0));
 	
 });
 
-var returnTable = function(res) {
+var getTreeJSON = function(parent_id) {
+	
 	db.use("remixtree").search('test', 'test_search', {
-		q: 'parent_id:"0"'
+		q: 'parent_id:"' + parent_id + '"' 
 	}, function(er, result) {
+		var returnValue = [];
 		if (er) {
 			throw er;
 		}
 
-		res.send(result.rows);
+		for(var i=0;i<result.rows.length;i++){
+			returnValue.push({"id":result.rows[i].id,"children":getTreeJSON(result.rows[i].id)});
+		}
+		return returnValue;
 	});
 }
 

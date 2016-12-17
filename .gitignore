@@ -32,3 +32,5 @@ nbproject
 .node_history
 
 launchConfigurations
+
+config/VCAP_SERVICES.json

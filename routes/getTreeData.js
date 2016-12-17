@@ -5,7 +5,13 @@ var router = express.Router();
 var Cloudant = require('cloudant');
 
 // Cloudant DB接続情報取得
-var services = JSON.parse(process.env.VCAP_SERVICES);
+var services = {};
+
+if (typeof process.env.VCAP_SERVICES === 'undefined') {
+    services = require('../config/VCAP_SERVICES.json');
+} else {
+    services = JSON.parse(process.env.VCAP_SERVICES)
+};
 
 var credentials = services['cloudantNoSQLDB'][0].credentials;
 var host = credentials.host;

@@ -13,7 +13,9 @@
         "nodemon": "*",
         "cradle":"*",
         "body-parser":"*",
-        "cloudant":"*"
+        "cloudant":"*",
+        "youtube-dl":"*",
+        "youtube-api":"*"
     },
     "scripts": {
         "start": "node app.js"

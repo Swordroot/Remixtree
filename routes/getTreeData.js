@@ -34,7 +34,7 @@ router.post('/Test', function(req, res) {
 });
 
 var returnTable = function(res) {
-	db.search('test', 'test_search', {
+	db.use("remixtree").search('test', 'test_search', {
 		q: 'parent_id:"0"'
 	}, function(er, result) {
 		if (er) {

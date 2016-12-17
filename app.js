@@ -102,4 +102,7 @@ var returnTable = function(res) {
  res.send(rows);
  });
 }
+
+//test
+app.use('/getTreeData', require('./routes/getTreeData.js'));
 app.listen(server);

@@ -23,7 +23,7 @@ var options = {
 // データベース接続
 var db = new (cradle.Connection)(host, port, options).database('remixtree');
 
- router.post('/getTreeData', function(req, res){
+ router.post('/Test', function(req, res){
  //res.setHeader('Content-Type', 'text/plain');
  returnTable(res);
 });

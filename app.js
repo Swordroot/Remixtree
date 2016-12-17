@@ -104,5 +104,5 @@ var returnTable = function(res) {
 }
 
 //test
-app.use('/getTreeData', require('./routes/getTreeData.js'));
+app.use('/getTreeData', require('./routes/getTreeData'));
 app.listen(server);

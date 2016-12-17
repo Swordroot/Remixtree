@@ -7,6 +7,9 @@ glibc/
 pnacl/
 emscripten/
 
+#Config file
+config/apiconfig.json
+
 # The submodule
 !/emscripten/
 

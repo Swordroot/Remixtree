@@ -30,13 +30,7 @@ var db = new (cradle.Connection)(host, port, options).database('remixtree');
 
 var returnTable = function(res) {
  // 全件検索を、作成したview名 items_view にて実行
- db.view('items/items_view', function (err, rows) {
- if (!err) {
- rows.forEach(function (id, row) {
- console.log("key: %s, row: %s", id, JSON.stringify(row));
- });
- } else { console.log("app.js returnTable error: " + err); }
-
+ db.view('test/test_view', function (err, rows) {
  res.send(rows);
  });
 }

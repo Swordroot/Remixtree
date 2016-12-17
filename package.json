@@ -15,7 +15,8 @@
         "body-parser":"*",
         "cloudant":"*",
         "youtube-dl":"*",
-        "youtube-api":"*"
+        "youtube-api":"*",
+        "underscore":"*"
     },
     "scripts": {
         "start": "node app.js"

@@ -41,4 +41,4 @@ var returnTable = function(res) {
  });
 }
 
-module.export(router);
+module.exports = router;

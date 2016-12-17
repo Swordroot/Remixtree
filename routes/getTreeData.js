@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 // Cloudant用アクセス・モジュール「cradle」設定
-var cradle = require('cradle');
+var Cloudant = require('cloudant');
 
 // Cloudant DB接続情報取得
 var services = JSON.parse(process.env.VCAP_SERVICES);
@@ -21,11 +21,15 @@ var options = {
 };
 
 // データベース接続
-var db = new (cradle.Connection)(host, port, options).database('remixtree');
+var cloudant = Cloudant({account:credentials.username,password:credentials.password});
+var db = cloudant.db;
 
- router.post('/Test', function(req, res){
+router.post('/Test', function(req, res){
  //res.setHeader('Content-Type', 'text/plain');
- returnTable(res);
+ //returnTable(res);
+ db.list(function(err,allDBs){
+ 	res.send(allDBs.join(","));
+ });
 });
 
 var returnTable = function(res) {

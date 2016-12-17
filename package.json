@@ -7,13 +7,13 @@
         "nano": "~5.11.0",
         "feedparser":"~0.19.2",
         "redis":"~0.10.1",
-        "node-red": "0.x",
         "express": "*",
         "ejs": "*",
         "cfenv": "*",
         "nodemon": "*",
         "cradle":"*",
-        "body-parser":"*"
+        "body-parser":"*",
+        "cloudant":"*"
     },
     "scripts": {
         "start": "node app.js"

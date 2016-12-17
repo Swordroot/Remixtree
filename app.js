@@ -18,28 +18,6 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Cloudant用アクセス・モジュール「cradle」設定
-var cradle = require('cradle');
-
-// Cloudant DB接続情報取得
-var services = JSON.parse(process.env.VCAP_SERVICES);
-console.log(JSON.stringify(services));
-
-var credentials = services['cloudantNoSQLDB'][0].credentials;
-var host = credentials.host;
-var port = credentials.port;
-var options = {
- cache : true,
- raw : false,
- secure : true,
- auth : {
- username : credentials.username,
- password : credentials.password
- }
-};
-
-// データベース接続
-var db = new (cradle.Connection)(host, port, options).database('cldb');
 
 //指定したポートにきたリクエストを受け取れるようにする
 var server = http.createServer(app).listen(appEnv.port, function () {
@@ -54,54 +32,6 @@ app.get('/tree', function(req, res){
   res.write(data);
   res.end();
 });
-
-app.post('/save', function(req, res){
- var date = new Date();
- var now = date.toString();
- res.setHeader('Content-Type', 'text/plain');
- req.body.date = now;
-
- // 項目の保存
- db.save( req.body,function(err,res){});
-  res.send(req.body);
-});
-//「全件削除」ボタンの id=removeAll, ui_item.jsの url:'/removeAll'でcall
-app.post('/removeAll', function(req, res){
-
- res.setHeader('Content-Type', 'text/plain');
- // 全件検索を、作成したview名 items_view にて実行
- db.view('items/items_view', function (err, rows) {
- if (!err) {
- rows.forEach(function (id, row) {
- db.remove(id);
- console.log("removed key is: %s", id);
- });
- } else { console.log("app.js db.remove error: " + err); }
-
- });
-
- res.send({});
-});
-
-
-//「全件表示」ボタンの id=getAll, ui_item.jsの url:'/getAll'でcall
-app.post('/getAll', function(req, res){
- //res.setHeader('Content-Type', 'text/plain');
- returnTable(res);
-});
-
-var returnTable = function(res) {
- // 全件検索を、作成したview名 items_view にて実行
- db.view('items/items_view', function (err, rows) {
- if (!err) {
- rows.forEach(function (id, row) {
- console.log("key: %s, row: %s", id, JSON.stringify(row));
- });
- } else { console.log("app.js returnTable error: " + err); }
-
- res.send(rows);
- });
-}
 
 //test
 app.use('/getTreeData', require('./routes/getTreeData'));

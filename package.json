@@ -16,7 +16,8 @@
         "cloudant":"*",
         "youtube-dl":"*",
         "youtube-api":"*",
-        "underscore":"*"
+        "underscore":"*",
+        "url":"*"
     },
     "scripts": {
         "start": "node app.js"

@@ -35,4 +35,14 @@ app.get('/tree', function(req, res){
 
 //test
 app.use('/getTreeData', require('./routes/getTreeData'));
+
+app.get('/tree/play', function(req, res){
+  var template = fs.readFileSync(__dirname + '/public/tree/play.ejs', 'utf-8');
+  var data = ejs.render(template, {});
+  
+  res.writeHead( 200, { 'Content-Type': 'text/html' } );
+  res.write(data);
+  res.end();
+});
+
 app.listen(server);

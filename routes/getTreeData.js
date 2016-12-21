@@ -35,13 +35,13 @@ var db = cloudant.db;
 
 router.post('/Test', function(req, res) {
     //res.setHeader('Content-Type', 'text/plain');
-    getTreeJSON(0, res);
+    getTreeJSON(1, res);
 
 });
 
 var dbSearch = db.use("remixtree").search;
 
-var getTreeJSON = function(parent_id, res) {
+var getTreeJSON = function(tree_group, res) {
     var sendingValue = [];
     var finishedFlag = false;
     //callback Root
@@ -50,10 +50,38 @@ var getTreeJSON = function(parent_id, res) {
     //ツリーグループというカラムを一つ追加し、ツリーのIDを持たせることとする。
     //これにより、あるツリーに属するデータを全取得、そのデータをもとに親子関係を作る
     //ということが可能になる
-    var aaa = dbSearch('test', 'test_search', {
-        q: 'parent_id:"' + parent_id + '"'
-    }, function(){});
-    res.send(aaa);
+    dbSearch('test', 'searchByTreeGroup', {
+        q: 'tree_group:' + tree_group + ''
+    }, function(er, result) {
+        if (er) {
+            throw er;
+        }
+
+        res.send(makeTreeData(result.rows));
+    });
+
+}
+
+var makeTreeData = function(dataArray) {
+    var rootElement = dataArray.filter(function(item,index){
+        if(item.fields.parent_id == 0){
+            return true;
+        }
+    });
+    rootElement[0].children = makeTreeDataChildren(dataArray,rootElement[0].id);
+    return rootElement[0];
+}
+var makeTreeDataChildren = function(dataArray,parent_id){
+    var returnArray = dataArray.filter(function(item,index){
+        if(item.fields.parent_id == parent_id){
+            return true;
+        }
+    });
+
+    for ( var i=0;i<returnArray.length;i++){
+        returnArray[i].children = makeTreeDataChildren(dataArray,returnArray[i].id);
+    }
+    return returnArray;
 }
 
 module.exports = router;

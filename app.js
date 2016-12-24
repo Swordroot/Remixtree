@@ -27,19 +27,22 @@ var server = http.createServer(app).listen(appEnv.port, function () {
 app.get('/tree', function(req, res){
   var template = fs.readFileSync(__dirname + '/public/tree/index.ejs', 'utf-8');
   var data = ejs.render(template, {});
-  
+
   res.writeHead( 200, { 'Content-Type': 'text/html' } );
   res.write(data);
   res.end();
 });
 
-//test
+
 app.use('/getTreeData', require('./routes/getTreeData'));
+
+//test
+app.use('/insertDB', require('./routes/insertDB'));
 
 app.get('/tree/play', function(req, res){
   var template = fs.readFileSync(__dirname + '/public/tree/play.ejs', 'utf-8');
   var data = ejs.render(template, {});
-  
+
   res.writeHead( 200, { 'Content-Type': 'text/html' } );
   res.write(data);
   res.end();

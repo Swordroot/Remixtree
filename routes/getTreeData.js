@@ -40,6 +40,17 @@ router.post('/Test', function(req, res) {
 
 });
 
+router.get('/Test/getAllDoc',function(req,res){
+    db.use("testforinsert").search('test', 'ourIDSearch', {
+        q: '*:*'
+    }, function(er, result) {
+        res.send(result);
+        //var treeGroup = result.rows[0].fields.tree_group;
+        //getTreeJSON(treeGroup,res);
+    })
+
+});
+
 router.get('/Test/getTreeJsonFromId', function(req, res) {
     var url_parts = url.parse(req.url, true);
     var id = url_parts.query.treeId;

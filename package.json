@@ -17,7 +17,9 @@
         "youtube-dl":"*",
         "youtube-api":"*",
         "underscore":"*",
-        "url":"*"
+        "url":"*",
+        "csvtojson":"*",
+        "fs":"*"
     },
     "scripts": {
         "start": "node app.js"

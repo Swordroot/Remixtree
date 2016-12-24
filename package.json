@@ -19,7 +19,8 @@
         "underscore":"*",
         "url":"*",
         "csvtojson":"*",
-        "fs":"*"
+        "fs":"*",
+        "multer":"*"
     },
     "scripts": {
         "start": "node app.js"

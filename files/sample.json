@@ -1,247 +1,290 @@
 [
     {
         "id": 1,
-        "parentId": "",
+        "parentId": 0,
         "childrenIds": [
             2,
-            3
+            3,
+            4,
+            5,
+            6,
+            7
         ],
-        "title": "",
+        "title": "PPAP（Pen-Pineapple-Apple-Pen Official）ペンパイナッポーアッポーペン／PIKOTARO(ピコ太郎)",
         "genre": "",
         "tags": "",
         "thumbnail": "",
-        "youtubeUrl": "",
-        "remixMoviePath": ""
+        "youtubeUrl": "https://www.youtube.com/watch?v=0E00Zuayv9Q",
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
         "id": 2,
         "parentId": 1,
-        "childrenIds": "",
+        "childrenIds": [],
         "title": "",
         "genre": "歌ってみた",
         "tags": "#Ryuk #死神リューク",
         "thumbnail": "",
         "youtubeUrl": "https://www.youtube.com/watch?v=5Ens7TZzgG0",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
         "id": 3,
         "parentId": 1,
-        "childrenIds": "",
+        "childrenIds": [],
         "title": "",
         "genre": "歌ってみた",
         "tags": "#BalladRemix #MoritzGarth",
         "thumbnail": "",
         "youtubeUrl": "https://www.youtube.com/watch?v=hcpI9auZmpI",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "４",
+        "id": 4,
         "parentId": 1,
-        "childrenIds": "",
+        "childrenIds": [],
         "title": "",
         "genre": "歌ってみた",
         "tags": "#Metal",
         "thumbnail": "",
         "youtubeUrl": "https://www.youtube.com/watch?v=fjV91oI5cL0",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "５",
+        "id": 5,
         "parentId": 1,
-        "childrenIds": "",
+        "childrenIds": [],
         "title": "",
         "genre": "BGM",
         "tags": "＃ＰＳＹ",
         "thumbnail": "",
         "youtubeUrl": "https://www.youtube.com/watch?v=QtcaBVUc",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "６",
+        "id": 6,
         "parentId": 1,
-        "childrenIds": "",
+        "childrenIds": [],
         "title": "",
         "genre": "替え歌　踊ってみた",
         "tags": "#ねば～る君",
         "thumbnail": "",
         "youtubeUrl": "https://www.youtube.com/wW2ratch?v=_kNZeOupQK8",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "７",
+        "id": 7,
         "parentId": 1,
-        "childrenIds": "",
+        "childrenIds": [
+            8,
+            9,
+            10,
+            11
+        ],
         "title": "",
         "genre": "演奏",
         "tags": "#EDMRmix",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/b1iNDME9oZM?list=PL1QA4oODLbgVf4fbrf5PiO4sRmCCIONbJ",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "８",
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 8,
+        "parentId": 7,
+        "childrenIds": [],
         "title": "",
         "genre": "演奏",
         "tags": "#BeatBox",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/AdpD_RRft2s?list=PL1QA4oODLbgVf4fbrf5PiO4sRmCCIONbJ",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "９",
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 9,
+        "parentId": 7,
+        "childrenIds": [],
         "title": "",
         "genre": "歌ってみた",
         "tags": "#R＆B #Ballad",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/oGZYNHdTsgA?list=PL1QA4oODLbgVf4fbrf5PiO4sRmCCIONbJ",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "１０",
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 10,
+        "parentId": 7,
+        "childrenIds": [],
         "title": "",
         "genre": "歌ってみた",
         "tags": "#jazz",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/iSiRAocqOiI?list=PL1QA4oODLbgVf4fbrf5PiO4sRmCCIONbJ",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": "１１",
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 11,
+        "parentId": 7,
+        "childrenIds": [],
         "title": "",
         "genre": "替え歌　歌ってみた",
         "tags": "#ブライアン　#クラブ",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/IdlUW7gSRcg",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 1
     },
     {
-        "id": 1,
-        "parentId": "",
-        "childrenIds": "",
-        "title": "",
+        "id": 12,
+        "parentId": 0,
+        "childrenIds": [
+            13,
+            14,
+            15,
+            16
+        ],
+        "title": "PERFECT HUMAN【MV】RADIO FISH/Full ver.",
         "genre": "",
         "tags": "",
         "thumbnail": "",
-        "youtubeUrl": "",
-        "remixMoviePath": ""
+        "youtubeUrl": "https://www.youtube.com/watch?v=4Bh1nm7Ir8c",
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 2,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 13,
+        "parentId": 12,
+        "childrenIds": [],
         "title": "",
         "genre": "歌ってみた",
         "tags": "#Posthardcore",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/0Auoa5qWUmE",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 3,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 14,
+        "parentId": 12,
+        "childrenIds": [],
         "title": "",
         "genre": "演奏",
         "tags": "#エレクトーン",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/LPQ2HFRM9OU",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 4,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 15,
+        "parentId": 12,
+        "childrenIds": [],
         "title": "",
         "genre": "踊ってみた",
         "tags": "#ブレイクアレンジ",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/gTUpV0wNuME",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 5,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 16,
+        "parentId": 12,
+        "childrenIds": [
+            17,
+            18,
+            19,
+            20,
+            21,
+            22
+        ],
         "title": "",
         "genre": "演奏",
         "tags": "#ROCK #ロック",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/NOcdqLqbvCY",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 6,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 17,
+        "parentId": 16,
+        "childrenIds": [],
         "title": "",
         "genre": "踊ってみた",
         "tags": "#bi4am",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/O0t3hdT2E9U",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 7,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 18,
+        "parentId": 16,
+        "childrenIds": [],
         "title": "",
         "genre": "歌ってみた　イラスト",
         "tags": "#ヨシズキ参謀",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/4RSSFDBDsu8",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 8,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 19,
+        "parentId": 16,
+        "childrenIds": [],
         "title": "",
         "genre": "替え歌　歌ってみた",
         "tags": "#Countryhuman",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/rHxC01bUrSc",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 9,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 20,
+        "parentId": 19,
+        "childrenIds": [],
         "title": "",
         "genre": "替え歌　歌ってみた",
         "tags": "#POPULARIDOL #TEN6",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/xxUCtUSPQBw",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 10,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 21,
+        "parentId": 19,
+        "childrenIds": [],
         "title": "",
         "genre": "演奏",
         "tags": "#吹奏楽",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/gIGRRDdtGT8",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     },
     {
-        "id": 11,
-        "parentId": 1,
-        "childrenIds": "",
+        "id": 22,
+        "parentId": 19,
+        "childrenIds": [],
         "title": "",
         "genre": "踊ってみた",
         "tags": "#298プロジェクト",
         "thumbnail": "",
         "youtubeUrl": "https://youtu.be/XPcyF2ANDmI",
-        "remixMoviePath": ""
+        "remixMoviePath": "",
+        "tree_group": 2
     }
 ]

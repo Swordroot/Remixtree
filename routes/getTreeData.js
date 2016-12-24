@@ -51,10 +51,11 @@ router.get('/Test/getAllDoc',function(req,res){
 
 });
 
-router.get('/Test/getTreeJsonFromId', function(req, res) {
+router.get('/getTreeJsonFromId', function(req, res) {
     var url_parts = url.parse(req.url, true);
     var id = url_parts.query.treeId;
     //res.send(url_parts.query);
+    console.log("id:" + id);
     getTreeJsonFromId(id,res);
 });
 
@@ -62,11 +63,11 @@ var dbSearch = db.use("remixtree").search;
 
 var getTreeJsonFromId = function(id, res) {
     dbSearch('test', 'searchByTreeGroup', {
-        q: 'id:"' + id + '"'
+        q: 'id:' + id + ''
     }, function(er, result) {
-        res.send(result.rows);
-        //var treeGroup = result.rows[0].fields.tree_group;
-        //getTreeJSON(treeGroup,res);
+        //res.send(result.rows);
+        var treeGroup = result.rows[0].fields.tree_group;
+        getTreeJSON(treeGroup,res);
     })
 }
 
@@ -80,12 +81,13 @@ var getTreeJSON = function(tree_group, res) {
     //これにより、あるツリーに属するデータを全取得、そのデータをもとに親子関係を作る
     //ということが可能になる
     dbSearch('test', 'searchByTreeGroup', {
-        q: 'tree_group:' + tree_group + ''
+        q: 'tree_group:' + tree_group + '',
+        include_docs:true
     }, function(er, result) {
         if (er) {
             throw er;
         }
-
+        //res.send(result);
         res.send(makeTreeData(result.rows));
     });
 
@@ -93,21 +95,23 @@ var getTreeJSON = function(tree_group, res) {
 
 var makeTreeData = function(dataArray) {
     var rootElement = dataArray.filter(function(item, index) {
-        if (item.fields.parent_id == 0) {
+        if (item.doc.parentId == 0) {
             return true;
         }
     });
-    rootElement[0].children = makeTreeDataChildren(dataArray, rootElement[0].id);
-    return rootElement[0];
+    var returnValue = rootElement[0].doc;
+    returnValue.children = makeTreeDataChildren(dataArray, returnValue.id);
+    return returnValue;
 }
 var makeTreeDataChildren = function(dataArray, parent_id) {
-    var returnArray = dataArray.filter(function(item, index) {
-        if (item.fields.parent_id == parent_id) {
+    var filteredArray = dataArray.filter(function(item, index) {
+        if (item.doc.parentId == parent_id) {
             return true;
         }
     });
-
-    for (var i = 0; i < returnArray.length; i++) {
+    var returnArray = [];
+    for (var i = 0; i < filteredArray.length; i++) {
+        returnArray.push(filteredArray[i].doc)
         returnArray[i].children = makeTreeDataChildren(dataArray, returnArray[i].id);
     }
     return returnArray;

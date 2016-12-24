@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var url = require('url');
 
 // Cloudant用アクセス・モジュール「cradle」設定
 var Cloudant = require('cloudant');
@@ -39,7 +40,24 @@ router.post('/Test', function(req, res) {
 
 });
 
+router.get('/Test/getTreeJsonFromId', function(req, res) {
+    var url_parts = url.parse(req.url, true);
+    var id = url_parts.query.treeId;
+    //res.send(url_parts.query);
+    getTreeJsonFromId(id,res);
+});
+
 var dbSearch = db.use("remixtree").search;
+
+var getTreeJsonFromId = function(id, res) {
+    dbSearch('test', 'searchByTreeGroup', {
+        q: 'id:"' + id + '"'
+    }, function(er, result) {
+        res.send(result.rows);
+        //var treeGroup = result.rows[0].fields.tree_group;
+        //getTreeJSON(treeGroup,res);
+    })
+}
 
 var getTreeJSON = function(tree_group, res) {
     var sendingValue = [];
@@ -63,23 +81,23 @@ var getTreeJSON = function(tree_group, res) {
 }
 
 var makeTreeData = function(dataArray) {
-    var rootElement = dataArray.filter(function(item,index){
-        if(item.fields.parent_id == 0){
+    var rootElement = dataArray.filter(function(item, index) {
+        if (item.fields.parent_id == 0) {
             return true;
         }
     });
-    rootElement[0].children = makeTreeDataChildren(dataArray,rootElement[0].id);
+    rootElement[0].children = makeTreeDataChildren(dataArray, rootElement[0].id);
     return rootElement[0];
 }
-var makeTreeDataChildren = function(dataArray,parent_id){
-    var returnArray = dataArray.filter(function(item,index){
-        if(item.fields.parent_id == parent_id){
+var makeTreeDataChildren = function(dataArray, parent_id) {
+    var returnArray = dataArray.filter(function(item, index) {
+        if (item.fields.parent_id == parent_id) {
             return true;
         }
     });
 
-    for ( var i=0;i<returnArray.length;i++){
-        returnArray[i].children = makeTreeDataChildren(dataArray,returnArray[i].id);
+    for (var i = 0; i < returnArray.length; i++) {
+        returnArray[i].children = makeTreeDataChildren(dataArray, returnArray[i].id);
     }
     return returnArray;
 }

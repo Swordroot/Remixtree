@@ -101,7 +101,9 @@ var makeTreeData = function(dataArray) {
     });
     var returnValue = rootElement[0].doc;
     returnValue.children = makeTreeDataChildren(dataArray, returnValue.id);
-    return returnValue;
+    var returnArray = [];
+    returnArray.push(returnValue);
+    return returnArray;
 }
 var makeTreeDataChildren = function(dataArray, parent_id) {
     var filteredArray = dataArray.filter(function(item, index) {

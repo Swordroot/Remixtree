@@ -5,6 +5,7 @@ var app = express();
 var fs = require( 'fs' );
 var ejs = require( 'ejs' );
 
+　
 //サーバーの立ち上げ
 var http = require('http');
 
@@ -36,8 +37,11 @@ app.get('/tree', function(req, res){
 
 app.use('/getTreeData', require('./routes/getTreeData'));
 
-//test
+
 app.use('/insertDB', require('./routes/insertDB'));
+
+//test
+app.use('/upload',require('./routes/upload.js'))
 
 app.get('/tree/play', function(req, res){
   var template = fs.readFileSync(__dirname + '/public/tree/play.ejs', 'utf-8');

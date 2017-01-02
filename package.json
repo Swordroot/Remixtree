@@ -22,7 +22,8 @@
         "multer":"*",
         "pkgcloud-bluemix-objectstorage":"*",
         "request":"*",
-        "async":"*"
+        "async":"*",
+        "mime":"*"
     },
     "scripts": {
         "start": "node app.js"

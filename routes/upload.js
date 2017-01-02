@@ -12,6 +12,7 @@ var request = require('request');
 //object Storage アクセス用
 var pkgcloud = require('pkgcloud-bluemix-objectstorage');
 var fs = require('fs');
+var mime = require('mime');
 
 // Cloudant用アクセス・モジュール「cradle」設定
 var Cloudant = require('cloudant');
@@ -200,13 +201,23 @@ router.get('/test/getFile', function(req, res) {
             storageClient.download({
                 container: 'Container1',
                 remote:url_parts.query.filename ,
-                local: url_parts.query.filepath + '\\' + url_parts.query.filename
+                local: './downloadFiles/' + url_parts.query.filename
             }, function(err, result) {
                 // handle the download result
                 if(err){
                     res.send(err);
                 }else{
-                    res.send(result);
+                    fs.readFile('./downloadFiles/' + url_parts.query.filename,function(err,data){
+                        res.header({'Content-Type': mime.lookup('./downloadFiles/' + url_parts.query.filename)});
+                        fs.unlink('./downloadFiles/' + url_parts.query.filename,function(err){
+                            if(err){
+                                res.send(err);
+                            }else{
+                                res.send(data);
+                            }
+                        });
+                    })
+
                 }
             });
         }

@@ -19,8 +19,8 @@
         "underscore":"*",
         "url":"*",
         "csvtojson":"*",
-        "fs":"*",
-        "multer":"*"
+        "multer":"*",
+        "pkgcloud-bluemix-objectstorage":"*"
     },
     "scripts": {
         "start": "node app.js"

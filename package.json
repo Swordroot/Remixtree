@@ -20,7 +20,9 @@
         "url":"*",
         "csvtojson":"*",
         "multer":"*",
-        "pkgcloud-bluemix-objectstorage":"*"
+        "pkgcloud-bluemix-objectstorage":"*",
+        "request":"*",
+        "async":"*"
     },
     "scripts": {
         "start": "node app.js"

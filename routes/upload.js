@@ -108,28 +108,46 @@ var getTokens = function(options, callback) {
 var storageClient = pkgcloud.storage.createClient(openstack_config);
 router.post('/test', function(req, res) {
     //console.log(req.file);
-    upload(req, res, function(err) {
-        if (err) {
-            res.send("Failed to write " + req.file.destination + " with " + err);
+    storageClient.auth(function(error) {
+        if (error) {
+            console.error("storageClient.auth() : error creating storage client: ", error);
+            res.send(error);
         } else {
-            var storage_option = {
-                container: 'Container1', // this can be either the name or an instance of container
-                remote: req.file.originalname, // name of the new file
-                contentType: req.file.mimetype, // optional mime type for the file, will attempt to auto-detect based on remote name
-                size: req.file.size // size of the file
-            }
-            var readStream = fs.createReadStream('./uploadFiles/' + req.file.filename);
-            var writeStream = storageClient.upload(storage_option);
-            writeStream.on('error',function(err){
-                res.send(err);
+            // Print the identity object which contains your Keystone token.
+            upload(req, res, function(err) {
+                if (err) {
+                    res.send("Failed to write " + req.file.destination + " with " + err);
+                } else {
+                    var storage_option = {
+                        container: 'Container1', // this can be either the name or an instance of container
+                        remote: req.file.originalname, // name of the new file
+                        contentType: req.file.mimetype, // optional mime type for the file, will attempt to auto-detect based on remote name
+                        size: req.file.size // size of the file
+                    }
+                    var readStream = fs.createReadStream('./uploadFiles/' + req.file.filename);
+                    var writeStream = storageClient.upload(storage_option);
+                    writeStream.on('error', function(err) {
+                        res.send(err);
+                    });
+                    writeStream.on('success', function(file) {
+                        fs.unlink('./uploadFiles/' + req.file.filename,function(err){
+                            if(err){
+                                res.send(err);
+                            }else{
+                                res.send(file);
+                            }
+                        })
+
+                    });
+                    readStream.pipe(writeStream);
+                    //res.send("uploaded " + req.file.originalname + " as " + req.file.filename + " Size: " + req.file.size);
+                }
             });
-            writeStream.on('success',function(file){
-                res.send(file);
-            });
-            readStream.pipe(writeStream);
-            //res.send("uploaded " + req.file.originalname + " as " + req.file.filename + " Size: " + req.file.size);
         }
+
     });
+
+
 });
 
 router.post('/test/getToken', function(req, res) {
@@ -153,9 +171,48 @@ router.get('/test/auth', function(req, res) {
 });
 
 router.get('/test/getContainers', function(req, res) {
-    storageClient.getContainers(function(err, containers) {
-        res.send(containers);
+    storageClient.auth(function(error) {
+        if (error) {
+            console.error("storageClient.auth() : error creating storage client: ", error);
+            res.send(error);
+        } else {
+            // Print the identity object which contains your Keystone token.
+            console.log("storageClient.auth() : created storage client: " + JSON.stringify(storageClient._identity));
+            storageClient.getContainers(function(err, containers) {
+                res.send(containers);
+            });
+        }
+
     });
+
+})
+
+router.get('/test/getFile', function(req, res) {
+    storageClient.auth(function(error) {
+        if (error) {
+            //console.error("storageClient.auth() : error creating storage client: ", error);
+            res.send(error);
+        } else {
+            // Print the identity object which contains your Keystone token.
+            //console.log("storageClient.auth() : created storage client: " + JSON.stringify(storageClient._identity));
+            var url_parts = url.parse(req.url, true);
+            url_parts.query.filename
+            storageClient.download({
+                container: 'Container1',
+                remote:url_parts.query.filename ,
+                local: url_parts.query.filepath + '\\' + url_parts.query.filename
+            }, function(err, result) {
+                // handle the download result
+                if(err){
+                    res.send(err);
+                }else{
+                    res.send(result);
+                }
+            });
+        }
+
+    });
+
 })
 
 module.exports = router;

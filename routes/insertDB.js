@@ -53,5 +53,14 @@ router.post('/test', function(req, res) {
         res.send('Inserted all documents');
     });
 });
+router.get('/test/viewall',function(req,res){
+    db.use('remixtree').view('test','test_view',function(err,body){
+        if(err){
+            res.send(err);
+        }else{
+            res.send(body);
+        }
+    })
+})
 
 module.exports = router;

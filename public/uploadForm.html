@@ -2,7 +2,10 @@
 <head></head>
 <body ng-controller="AppController as app">
     <form action="upload/test" method="POST" enctype="multipart/form-data">
-        <input type="file" name="upName">
+        <input type="text" name="movieTitle">
+        <input type="text" name="genre">
+        <input type="text" name="parentId">
+        <label>ファイル指定</label><input type="file" name="upName">
         <input type="submit">
     </form>
 </body>

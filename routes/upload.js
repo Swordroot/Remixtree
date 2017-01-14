@@ -163,6 +163,7 @@ router.post('/uploadByYoutubeURL',function(req,res){
             var info_;
             video.on('info',function(info){
                 info_ = info;
+                console.log(info);
             });
             video.pipe(fs.createWriteStream('./uploadFiles/' + '____buffer____'));
             video.on('end',function(){
@@ -271,9 +272,19 @@ router.get('/test/getFile', function(req, res) {
 
 });
 
-router.post('/test/notifyComplete',function(req,res){
-    console.log(req.body);
+router.get('/notifyProcessingComplete',function(req,res){
     res.send("OK");
 });
+/*
+入力欄に必要なもの
 
+・タイトル
+・動画ファイル
+・編集元URL
+・タグ指定
+・ジャンル
+
+入力はさせないけど必要なパラメータ
+・親ID(fromクエリパラメータ)
+*/
 module.exports = router;

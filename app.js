@@ -4,7 +4,7 @@ var app = express();
 
 var fs = require( 'fs' );
 var ejs = require( 'ejs' );
-
+app.engine('ejs',ejs.renderFile);
 　
 //サーバーの立ち上げ
 var http = require('http');

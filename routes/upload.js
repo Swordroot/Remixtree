@@ -280,11 +280,16 @@ router.get('/notifyProcessingComplete',function(req,res){
 
 ・タイトル
 ・動画ファイル
-・編集元URL
 ・タグ指定
 ・ジャンル
 
 入力はさせないけど必要なパラメータ
 ・親ID(fromクエリパラメータ)
 */
+router.get('/Form',function(req,res){
+    var url_parts = url.parse(req.url, true);
+    var renderObject = {};
+    renderObject.parentId = url_parts.query.parentId;
+    res.render('uploadForm.ejs',renderObject);
+});
 module.exports = router;

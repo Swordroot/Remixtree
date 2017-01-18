@@ -6,6 +6,8 @@ var upload = multer({
     dest: './uploadFiles/'
 }).single('upName');
 
+var ytdl = require('youtube-dl');
+
 var async = require('async');
 var request = require('request');
 
@@ -151,6 +153,50 @@ router.post('/test', function(req, res) {
 
 });
 
+router.post('/uploadByYoutubeURL',function(req,res){
+    var ytURL = req.body.youtubeURL;
+    var video = ytdl(ytURL);
+    storageClient.auth(function(error){
+        if(error){
+            res.send(error);
+        }else{
+            var info_;
+            video.on('info',function(info){
+                info_ = info;
+                console.log(info);
+            });
+            video.pipe(fs.createWriteStream('./uploadFiles/' + '____buffer____'));
+            video.on('end',function(){
+                var storage_option = {
+                    container: 'Container1', // this can be either the name or an instance of container
+                    remote: info_._filename, // name of the new file
+                    contentType: mime.lookup('./uploadFiles/' + '____buffer____'), // optional mime type for the file, will attempt to auto-detect based on remote name
+                    size: info_.size // size of the file
+                }
+                var readStream = fs.createReadStream('./uploadFiles/' + '____buffer____');
+                var writeStream = storageClient.upload(storage_option);
+                writeStream.on('error', function(err) {
+                    res.send(err);
+                });
+                writeStream.on('success', function(file) {
+                    fs.unlink('./uploadFiles/' + '____buffer____',function(err){
+                        if(err){
+                            res.send(err);
+                        }else{
+                            res.send(file);
+                        }
+                    })
+
+                });
+                readStream.pipe(writeStream);
+
+            })
+        }
+    })
+
+
+})
+
 router.post('/test/getToken', function(req, res) {
     getTokens(openstack_config, function(err, response, tokens) {
         res.send(response);
@@ -224,6 +270,26 @@ router.get('/test/getFile', function(req, res) {
 
     });
 
-})
+});
 
+router.get('/notifyProcessingComplete',function(req,res){
+    res.send("OK");
+});
+/*
+入力欄に必要なもの
+
+・タイトル
+・動画ファイル
+・タグ指定
+・ジャンル
+
+入力はさせないけど必要なパラメータ
+・親ID(fromクエリパラメータ)
+*/
+router.get('/Form',function(req,res){
+    var url_parts = url.parse(req.url, true);
+    var renderObject = {};
+    renderObject.parentId = url_parts.query.parentId;
+    res.render('uploadForm.ejs',renderObject);
+});
 module.exports = router;

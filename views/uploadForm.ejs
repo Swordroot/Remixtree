@@ -1,0 +1,14 @@
+<html>
+<head></head>
+<body ng-controller="AppController as app">
+    <form action="upload/test" method="POST" enctype="multipart/form-data">
+        <label>タイトル</label><input type="text" name="movieTitle"><br>
+        <label>ジャンル</label><input type="text" name="genre"><br>
+        <label>タグ</label><input type="text" name="tags"><br>
+        <input style="display:none" type="text" name="parentId" value="<%= parentId %>">
+        <label>ファイル指定</label><input type="file" name="upName">
+        <input type="submit">
+    </form>
+</body>
+
+</html>

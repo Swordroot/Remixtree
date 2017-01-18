@@ -63,7 +63,7 @@ router.get('/test/viewall',function(req,res){
     })
 })
 
-router.get('/test/viewall',function(req,res){
+router.get('/test/viewStats',function(req,res){
     db.use('remixtree').view('test','getIdStats',function(err,body){
         if(err){
             res.send(err);

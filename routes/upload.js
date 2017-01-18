@@ -292,4 +292,7 @@ router.get('/Form',function(req,res){
     renderObject.parentId = url_parts.query.parentId;
     res.render('uploadForm.ejs',renderObject);
 });
+router.post('/FromUpLoadForm',function(req,res){
+
+});
 module.exports = router;

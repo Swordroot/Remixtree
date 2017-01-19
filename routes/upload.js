@@ -291,9 +291,9 @@ router.get('/Form', function(req, res) {
     renderObject.parentId = url_parts.query.parentId;
     console.log(req.secure);
     var req_protocol = '';
-    if(!req.secure){
+    if (!req.secure) {
         req_protocol = 'http://'
-    }else{
+    } else {
         req_protocol = 'https://'
     }
     request(req_protocol + req.headers.host + '/getTreeData/getTreeJsonFromId?treeId=' + url_parts.query.parentId, function(error, response, body) {
@@ -301,13 +301,88 @@ router.get('/Form', function(req, res) {
             console.log(JSON.parse(body)[0]);
             renderObject.baseYoutubeUrl = JSON.parse(body)[0].youtubeUrl;
             res.render('uploadForm.ejs', renderObject);
-        }else{
+        } else {
             res.send(error);
         }
     });
 
 });
 router.post('/FromUpLoadForm', function(req, res) {
+    var sendingObject = {};
+    storageClient.auth(function(error) {
+        if (error) {
+            console.error("storageClient.auth() : error creating storage client: ", error);
+            res.send(error);
+        } else {
+            // Print the identity object which contains your Keystone token.
+            upload(req, res, function(err) {
+                if (err) {
+                    res.send("Failed to write " + req.file.destination + " with " + err);
+                } else {
+                    var storage_option = {
+                        container: 'Container1', // this can be either the name or an instance of container
+                        remote: req.file.originalname, // name of the new file
+                        contentType: req.file.mimetype, // optional mime type for the file, will attempt to auto-detect based on remote name
+                        size: req.file.size // size of the file
+                    }
+                    var readStream = fs.createReadStream('./uploadFiles/' + req.file.filename);
+                    var writeStream = storageClient.upload(storage_option);
+                    writeStream.on('error', function(err) {
+                        res.send(err);
+                    });
+                    writeStream.on('success', function(file) {
+                        fs.unlink('./uploadFiles/' + req.file.filename, function(err) {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                //ここで元動画のアップロード完了
+                                sendingObject.userMovieFile = file;
+                                //コールバック地獄だけど気にしたら負け
+                                //ここから編集元youtube動画のアップロード
+                                var ytURL = req.body.youtubeURL;
+                                var video = ytdl(ytURL);
+                                var info_;
+                                video.on('info', function(info) {
+                                    info_ = info;
+                                    console.log(info);
+                                });
+                                video.pipe(fs.createWriteStream('./uploadFiles/' + '____buffer____'));
+                                video.on('end', function() {
+                                    var storage_option = {
+                                        container: 'Container1', // this can be either the name or an instance of container
+                                        remote: info_._filename, // name of the new file
+                                        contentType: mime.lookup('./uploadFiles/' + '____buffer____'), // optional mime type for the file, will attempt to auto-detect based on remote name
+                                        size: info_.size // size of the file
+                                    }
+                                    var readStream = fs.createReadStream('./uploadFiles/' + '____buffer____');
+                                    var writeStream = storageClient.upload(storage_option);
+                                    writeStream.on('error', function(err) {
+                                        res.send(err);
+                                    });
+                                    writeStream.on('success', function(file2) {
+                                        fs.unlink('./uploadFiles/' + '____buffer____', function(err) {
+                                            if (err) {
+                                                res.send(err);
+                                            } else {
+                                                sendingObject.baseYoutubeMovieFile = file2;
+                                                res.send(sendingObject);
+                                            }
+                                        })
 
+                                    });
+                                    readStream.pipe(writeStream);
+
+                                })
+                            }
+                        })
+
+                    });
+                    readStream.pipe(writeStream);
+                    //res.send("uploaded " + req.file.originalname + " as " + req.file.filename + " Size: " + req.file.size);
+                }
+            });
+        }
+
+    });
 });
 module.exports = router;

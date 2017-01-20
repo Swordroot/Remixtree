@@ -288,23 +288,28 @@ router.get('/notifyProcessingComplete', function(req, res) {
 router.get('/Form', function(req, res) {
     var url_parts = url.parse(req.url, true);
     var renderObject = {};
-    renderObject.parentId = url_parts.query.parentId;
-    console.log(req.secure);
-    var req_protocol = '';
-    if (!req.secure) {
-        req_protocol = 'http://'
-    } else {
-        req_protocol = 'https://'
-    }
-    request(req_protocol + req.headers.host + '/getTreeData/getTreeJsonFromId?treeId=' + url_parts.query.parentId, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(JSON.parse(body)[0]);
-            renderObject.baseYoutubeUrl = JSON.parse(body)[0].youtubeUrl;
-            res.render('uploadForm.ejs', renderObject);
+    if(!url_parts.query.parentId){
+        res.send("specify parentId in query parameter");
+    }else{
+        renderObject.parentId = url_parts.query.parentId;
+        console.log(req.secure);
+        var req_protocol = '';
+        if (!req.secure) {
+            req_protocol = 'http://'
         } else {
-            res.send(error);
+            req_protocol = 'https://'
         }
-    });
+        request(req_protocol + req.headers.host + '/getTreeData/getTreeJsonFromId?treeId=' + url_parts.query.parentId, function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(JSON.parse(body)[0]);
+                renderObject.baseYoutubeUrl = JSON.parse(body)[0].youtubeUrl;
+                res.render('uploadForm.ejs', renderObject);
+            } else {
+                res.send(error);
+            }
+        });
+    }
+
 
 });
 router.post('/FromUpLoadForm', function(req, res) {
@@ -338,6 +343,7 @@ router.post('/FromUpLoadForm', function(req, res) {
                                 //ここで元動画のアップロード完了
                                 sendingObject.userMovieFile = file;
                                 //コールバック地獄だけど気にしたら負け
+                                //コールバック地獄にならないいい書き方誰か教えて
                                 //ここから編集元youtube動画のアップロード
                                 var ytURL = req.body.youtubeURL;
                                 var video = ytdl(ytURL);
@@ -365,6 +371,36 @@ router.post('/FromUpLoadForm', function(req, res) {
                                                 res.send(err);
                                             } else {
                                                 sendingObject.baseYoutubeMovieFile = file2;
+                                                //ここでyoutube動画もアップロード完了
+                                                //メタデータをDBに挿入するところに入る
+                                                var req_protocol = '';
+                                                if (!req.secure) {
+                                                    req_protocol = 'http://'
+                                                } else {
+                                                    req_protocol = 'https://'
+                                                }
+                                                request(req_protocol + req.headers.host + '/insertDB/test/viewStats',function(error, response, body) {
+                                                    if (!error && response.statusCode == 200) {
+                                                        var newMetaData = {};
+                                                        newMetaData.id = JSON.parse(body).rows[0].value.max + 1;
+                                                        newMetaData.parentId = req.body.parentId;
+                                                        newMetaData.childrenIds = [];
+                                                        newMetaData.title = req.body.title;
+                                                        newMetaData.tags = info_.tags.concat(req.body.tags);
+                                                        newMetaData.genre = req.body.genre;
+                                                        db.use('remixtree').bulk({
+                                                            docs: [newMetaData]
+                                                        }, function(er) {
+                                                            if (er) {
+                                                                throw er;
+                                                            }
+
+                                                            console.log('Inserted new MetaData');
+                                                        });
+                                                    } else {
+                                                        res.send(error);
+                                                    }
+                                                });
                                                 res.send(sendingObject);
                                             }
                                         })

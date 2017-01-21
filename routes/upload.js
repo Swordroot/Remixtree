@@ -303,6 +303,7 @@ router.get('/Form', function(req, res) {
             if (!error && response.statusCode == 200) {
                 console.log(JSON.parse(body)[0]);
                 renderObject.baseYoutubeUrl = JSON.parse(body)[0].youtubeUrl;
+                renderObject.tree_group = JSON.parse(body)[0].tree_group;
                 res.render('uploadForm.ejs', renderObject);
             } else {
                 res.send(error);
@@ -386,22 +387,23 @@ router.post('/FromUpLoadForm', function(req, res) {
                                                         newMetaData.parentId = req.body.parentId;
                                                         newMetaData.childrenIds = [];
                                                         newMetaData.title = req.body.title;
-                                                        newMetaData.tags = info_.tags.concat(req.body.tags);
+                                                        console.log(req.body.tags);
+                                                        newMetaData.tags = JSON.stringify(info_.tags.concat(req.body.tags));
                                                         newMetaData.genre = req.body.genre;
-                                                        db.use('remixtree').bulk({
-                                                            docs: [newMetaData]
-                                                        }, function(er) {
-                                                            if (er) {
-                                                                throw er;
+                                                        newMetaData.tree_group = req.body.tree_group;
+                                                        request.post({url:req_protocol + req.headers.host + '/insertDB/insertNewData',form:newMetaData},function(error,response,body){
+                                                            if(!error && response.statusCode == 200){
+                                                                //ここから編集サーバーに通知を送信
+                                                                res.send(sendingObject);
+                                                            }else{
+                                                                res.send(error);
                                                             }
-
-                                                            console.log('Inserted new MetaData');
-                                                        });
+                                                        })
                                                     } else {
                                                         res.send(error);
                                                     }
                                                 });
-                                                res.send(sendingObject);
+                                                //res.send(sendingObject);
                                             }
                                         })
 

@@ -1,13 +1,70 @@
 <html>
-<head></head>
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript">
+        function addTag(obj){
+            var elem = $('<input type="text" name="tags" style="width:80%"><button type="button" style="width:20%" onclick="deleteTag(this)">削除</button><br>');
+            $(obj).before(elem);
+        }
+        function deleteTag(obj){
+            $(obj).prev().remove();
+            $(obj).next().remove();
+            $(obj).remove();
+        }
+    </script>
+</head>
 <body ng-controller="AppController as app">
-    <form action="upload/test" method="POST" enctype="multipart/form-data">
-        <label>タイトル</label><input type="text" name="movieTitle"><br>
-        <label>ジャンル</label><input type="text" name="genre"><br>
-        <label>タグ</label><input type="text" name="tags"><br>
+    <form action="FromUploadForm" method="POST" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <th>
+                    <label>タイトル</label>
+                </th>
+                <td>
+                    <input type="text" name="title" style="width:100%">
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label>タグ</label>
+                </th>
+                <td>
+                    <input type="text" name="tags" style="width:100%"><br>
+                    <button type="button" onclick="addTag(this)">追加</button>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label>ジャンル</label>
+                </th>
+                <td>
+                    <select name="genre">
+                        <option value="歌ってみた">歌ってみた</option>
+                        <option value="BGM">BGM</option>
+                        <option value="替え歌">替え歌</option>
+                        <option value="踊ってみた">踊ってみた</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label>ファイル指定</label>
+                </th>
+                <td>
+                    <input type="file" name="upName">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" style="width:100%">
+                </td>
+            </tr>
+        </table>
+
         <input style="display:none" type="text" name="parentId" value="<%= parentId %>">
-        <label>ファイル指定</label><input type="file" name="upName">
-        <input type="submit">
+        <input style="display:none" type="text" name="youtubeURL" value="<%= baseYoutubeUrl %>">
+        <input style="display:none" type="text" name="tree_group" value="<%= tree_group %>">
+
     </form>
 </body>
 

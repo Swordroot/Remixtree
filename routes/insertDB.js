@@ -64,4 +64,58 @@ router.get('/test/viewall',function(req,res){
 })
 
 
+router.get('/test/viewStats',function(req,res){
+    db.use('remixtree').view('test','getIdStats',function(err,body){
+        if(err){
+            res.send(err);
+        }else{
+            res.send(body);
+        }
+    })
+});
+
+router.post('/insertNewData',function(req,res){
+    var metadata = req.body;
+    metadata.id = Number(metadata.id);
+    metadata.parentId = Number(metadata.parentId);
+    metadata.tree_group = Number(metadata.tree_group);
+    metadata.childrenIds = [];
+    console.log(metadata.tags);
+    metadata.tags = JSON.parse(metadata.tags);
+    console.log(metadata);
+    //まず新データの挿入
+    db.use('remixtree').bulk({
+        docs: [metadata]
+    }, function(er) {
+        if (er) {
+            throw er;
+        }
+        console.log('Inserted new MetaData');
+        //ここから親データの弄繰り回し
+        db.use('remixtree').view('test','test_view',function(err,body){
+            if(err){
+                res.send(err);
+            }else{
+                var resultArray = body.rows.filter(function(elem){
+                    return (elem.value.id == metadata.parentId);
+                });
+                var targetData = resultArray[0].value;
+                targetData.childrenIds = targetData.childrenIds.concat(metadata.id);
+                db.use('remixtree').bulk({
+                    docs: [targetData]
+                }, function(er) {
+                    if (er) {
+                        throw er;
+                    }
+
+                    console.log('update parent data');
+                    res.send("ok");
+                });
+            }
+        })
+    });
+})
+
+
+
 module.exports = router;

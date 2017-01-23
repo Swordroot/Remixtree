@@ -311,10 +311,20 @@ router.get('/youtubeAuth',function(req,res){
         client_secret: client_credencials.web.cilent_secret,
         redirect_url: redirectURLForGoogleOAuth
     });
-    opn(oauth.generateAuthUrl({
+    request(oauth.generateAuthUrl({
         access_type: "offline",
         scope: ["https://www.googleapis.com/auth/youtube.upload"]
-    }));
+    }),function(err,htmlResponse,body){
+        if(!err){
+            res.send(body);
+        }else{
+            res.send(err);
+        }
+    })
+    // opn(oauth.generateAuthUrl({
+    //     access_type: "offline",
+    //     scope: ["https://www.googleapis.com/auth/youtube.upload"]
+    // }));
 
 })
 router.get('/notifyProcessingComplete', function(req, res) {

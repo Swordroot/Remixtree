@@ -374,9 +374,16 @@ router.get('/notifyProcessingComplete', function(req, res) {
                         if(err){
                             res.send(err);
                         }else{
-                            console.log("Done.");
-                            console.log(data);
-                            res.send(data);
+                            fs.unlink('./downloadFiles/' + url_parts.query.filename, function(err) {
+                                if (err) {
+                                    res.send(err);
+                                } else {
+                                    console.log("Done.");
+                                    console.log(data);
+                                    res.send(data);
+                                }
+                            });
+
                         }
                     });
 

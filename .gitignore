@@ -8,7 +8,7 @@ pnacl/
 emscripten/
 
 #Config file
-config/apiconfig.json
+!config/apiconfig.json
 
 # The submodule
 !/emscripten/

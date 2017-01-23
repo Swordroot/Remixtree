@@ -9,6 +9,7 @@ emscripten/
 
 #Config file
 config/apiconfig.json
+config/client_secret_tone.json
 
 # The submodule
 !/emscripten/

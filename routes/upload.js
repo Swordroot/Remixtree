@@ -7,6 +7,8 @@ var upload = multer({
 }).single('upName');
 
 var ytdl = require('youtube-dl');
+var ytapi = require('youtube-api');
+var opn = require('opn');
 
 var async = require('async');
 var request = require('request');
@@ -272,6 +274,43 @@ router.get('/test/getFile', function(req, res) {
 });
 
 router.get('/notifyProcessingComplete', function(req, res) {
+    storageClient.auth(function(error) {
+        if (error) {
+            //console.error("storageClient.auth() : error creating storage client: ", error);
+            res.send(error);
+        } else {
+            // Print the identity object which contains your Keystone token.
+            //console.log("storageClient.auth() : created storage client: " + JSON.stringify(storageClient._identity));
+            var url_parts = url.parse(req.url, true);
+            url_parts.query.filename
+            storageClient.download({
+                container: 'Container1',
+                remote: url_parts.query.filename,
+                local: './downloadFiles/' + url_parts.query.filename
+            }, function(err, result) {
+                // handle the download result
+                if (err) {
+                    res.send(err);
+                } else {
+                    //こっからyoutubeに上げる処理をしていく
+                    fs.readFile('./downloadFiles/' + url_parts.query.filename, function(err, data) {
+                        res.header({
+                            'Content-Type': mime.lookup('./downloadFiles/' + url_parts.query.filename)
+                        });
+                        fs.unlink('./downloadFiles/' + url_parts.query.filename, function(err) {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                res.send(data);
+                            }
+                        });
+                    })
+
+                }
+            });
+        }
+
+    });
     res.send("OK");
 });
 /*

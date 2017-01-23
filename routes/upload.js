@@ -315,8 +315,8 @@ router.get('/youtubeAuth',function(req,res){
         access_type: "offline",
         scope: ["https://www.googleapis.com/auth/youtube.upload"]
     }),function(err,htmlResponse,body){
-        if(!err){
-            res.send(body);
+        if(!err && htmlResponse.statusCode == 200){
+            res.send("Successfully Authenticated");
         }else{
             res.send(err);
         }

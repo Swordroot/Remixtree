@@ -23,7 +23,8 @@
         "pkgcloud-bluemix-objectstorage":"*",
         "request":"*",
         "async":"*",
-        "mime":"*"
+        "mime":"*",
+        "opn":"*"
     },
     "scripts": {
         "start": "node app.js"

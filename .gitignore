@@ -39,5 +39,6 @@ launchConfigurations
 config/VCAP_SERVICES.json
 uploadFiles/*
 !uploadFiles/readme.txt
+!uploadFiles/deploytestfile.txt
 downloadFiles/*
 !downloadFiles/readme.txt

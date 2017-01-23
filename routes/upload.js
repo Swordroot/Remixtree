@@ -304,7 +304,19 @@ router.get('/test/getFile', function(req, res) {
     });
 
 });
+router.get('/youtubeAuth',function(req,res){
+    oauth = ytapi.authenticate({
+        type: "oauth",
+        client_id: client_credencials.web.client_id,
+        client_secret: client_credencials.web.cilent_secret,
+        redirect_url: redirectURLForGoogleOAuth
+    });
+    opn(oauth.generateAuthUrl({
+        access_type: "offline",
+        scope: ["https://www.googleapis.com/auth/youtube.upload"]
+    }));
 
+})
 router.get('/notifyProcessingComplete', function(req, res) {
     storageClient.auth(function(error) {
         if (error) {

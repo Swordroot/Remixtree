@@ -23,11 +23,13 @@ var Cloudant = require('cloudant');
 
 // Cloudant DB接続情報取得
 var services = {};
-
+var google_api_key = "";
 if (typeof process.env.VCAP_SERVICES === 'undefined') {
     services = require('../config/VCAP_SERVICES.json');
+    google_api_key = require('../config/apiconfig.json').google_api.key;
 } else {
-    services = JSON.parse(process.env.VCAP_SERVICES)
+    services = JSON.parse(process.env.VCAP_SERVICES);
+    google_api_key = process.env.google_api_key;
 };
 
 var credentials = services['cloudantNoSQLDB'][0].credentials;
@@ -292,7 +294,7 @@ router.get('/notifyProcessingComplete', function(req, res) {
                 if (err) {
                     res.send(err);
                 } else {
-                    //こっからyoutubeに上げる処理をしていく
+                    //ここからyoutubeにアップロードする処理を組んでいく
                     fs.readFile('./downloadFiles/' + url_parts.query.filename, function(err, data) {
                         res.header({
                             'Content-Type': mime.lookup('./downloadFiles/' + url_parts.query.filename)

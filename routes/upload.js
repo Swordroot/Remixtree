@@ -12,6 +12,12 @@ var opn = require('opn');
 var oauth = {};
 var uploadFilenameOnThisServer = "";
 
+//-------------------------------------------------------------------------
+//動画編集サーバーのアップロード完了通知先のエンドポイントをここで設定してください
+var movieProcessingServerEndPoint = "http://movieProcessingServer/";
+var requestToMovieServer = false;
+//-------------------------------------------------------------------------
+
 var async = require('async');
 var request = require('request');
 
@@ -562,6 +568,11 @@ router.post('/FromUpLoadForm', function(req, res) {
                                                         }, function(error, response, body) {
                                                             if (!error && response.statusCode == 200) {
                                                                 //ここから編集サーバーに通知を送信
+                                                                var requestToUploadFinishUrl = movieProcessingServerEndPoint;
+                                                                requestToUploadFinishUrl += '?movie_url=';
+                                                                requestToUploadFinishUrl += (http_protocol + http_host + http_port);
+                                                                requestToUploadFinishUrl += '/upload/test/getFile?filename=';
+                                                                requestToUploadFinishUrl += 'filename';
                                                                 res.send(sendingObject);
                                                             } else {
                                                                 res.send(error);

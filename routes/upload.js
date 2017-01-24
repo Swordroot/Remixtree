@@ -12,11 +12,9 @@ var opn = require('opn');
 var oauth = {};
 var uploadFilenameOnThisServer = "";
 
-//-------------------------------------------------------------------------
-//動画編集サーバーのアップロード完了通知先のエンドポイントをここで設定してください
-var movieProcessingServerEndPoint = "http://movieProcessingServer/";
+//ここでは初期値を設定してるだけなので、実際の設定はもうちょっと下のほうでやってます
+var movieProcessingServerEndPoint = "";
 var requestToMovieServer = false;
-//-------------------------------------------------------------------------
 
 var async = require('async');
 var request = require('request');
@@ -48,6 +46,12 @@ if (typeof process.env.VCAP_SERVICES === 'undefined') {
     http_host = "localhost"
     http_port = ":" + appEnv.port;
     redirectURLForGoogleOAuth = client_credencials.web.redirect_uris[0];
+    //-------------------------------------------------------------------------
+    //ローカルで動かす場合は
+    //動画編集サーバーのアップロード完了通知先のエンドポイントをここで設定してください
+    movieProcessingServerEndPoint = "http://movieProcessingServer/";
+    requestToMovieServer = false;
+    //-------------------------------------------------------------------------
 } else {
     services = JSON.parse(process.env.VCAP_SERVICES);
     google_api_key = process.env.tone_api_key;
@@ -55,6 +59,8 @@ if (typeof process.env.VCAP_SERVICES === 'undefined') {
     http_protocol = "https://";
     http_host = "remixtreehackasong.mybluemix.net"
     redirectURLForGoogleOAuth = client_credencials.web.redirect_uris[1];
+    movieProcessingServerEndPoint = process.env.movieProcessingServerEndPoint;
+    requestToMovieServer = process.env.requestToMovieServer;
 };
 
 oauth = ytapi.authenticate({
@@ -310,7 +316,7 @@ router.get('/test/getFile', function(req, res) {
     });
 
 });
-router.get('/youtubeAuth',function(req,res){
+router.get('/youtubeAuth', function(req, res) {
     oauth = ytapi.authenticate({
         type: "oauth",
         client_id: client_credencials.web.client_id,
@@ -318,19 +324,19 @@ router.get('/youtubeAuth',function(req,res){
         redirect_url: redirectURLForGoogleOAuth
     });
     request(oauth.generateAuthUrl({
-        access_type: "offline",
-        scope: ["https://www.googleapis.com/auth/youtube.upload"]
-    }),function(err,htmlResponse,body){
-        if(!err && htmlResponse.statusCode == 200){
-            res.send("Successfully Authenticated");
-        }else{
-            res.send(err);
-        }
-    })
-    // opn(oauth.generateAuthUrl({
-    //     access_type: "offline",
-    //     scope: ["https://www.googleapis.com/auth/youtube.upload"]
-    // }));
+            access_type: "offline",
+            scope: ["https://www.googleapis.com/auth/youtube.upload"]
+        }), function(err, htmlResponse, body) {
+            if (!err && htmlResponse.statusCode == 200) {
+                res.send("Successfully Authenticated");
+            } else {
+                res.send(err);
+            }
+        })
+        // opn(oauth.generateAuthUrl({
+        //     access_type: "offline",
+        //     scope: ["https://www.googleapis.com/auth/youtube.upload"]
+        // }));
 
 })
 router.get('/notifyProcessingComplete', function(req, res) {
@@ -342,74 +348,89 @@ router.get('/notifyProcessingComplete', function(req, res) {
             // Print the identity object which contains your Keystone token.
             //console.log("storageClient.auth() : created storage client: " + JSON.stringify(storageClient._identity));
             var url_parts = url.parse(req.url, true);
-            url_parts.query.filename
-            storageClient.download({
-                container: 'Container1',
-                remote: url_parts.query.filename,
-                local: './downloadFiles/' + url_parts.query.filename
-            }, function(err, result) {
-                // handle the download result
-                if (err) {
-                    res.send(err);
-                } else {
-                    //ここからyoutubeにアップロードする処理を組んでいく
-                    uploadFilenameOnThisServer = url_parts.query.filename;
-                    var uploadrequest = ytapi.videos.insert({
-                        resource: {
-                            // Video title and description
-                            snippet: {
-                                title: "Testing YoutTube API NodeJS module",
-                                description: "Test video upload via YouTube API"
-                            }
-                            // I don't want to spam my subscribers
-                            ,
-                            status: {
-                                privacyStatus: "private"
-                            }
-                        }
-                        // This is for the callback function
-                        ,
-                        part: "snippet,status"
-
-                        // Create the readable stream to upload the video
-                        ,
-                        media: {
-                            body: fs.createReadStream('./downloadFiles/' + url_parts.query.filename)
-                        }
-                    }, (err, data) => {
-                        if(err){
-                            res.send(err);
-                        }else{
-                            fs.unlink('./downloadFiles/' + url_parts.query.filename, function(err) {
-                                if (err) {
-                                    res.send(err);
-                                } else {
-                                    console.log("Done.");
-                                    console.log(data);
-                                    res.send(data);
+            if (!url_parts.query.filename || !url_parts.query.treeId) {
+                res.send("specify correct parameters!");
+            } else {
+                storageClient.download({
+                    container: 'Container1',
+                    remote: url_parts.query.filename,
+                    local: './downloadFiles/' + url_parts.query.filename
+                }, function(err, result) {
+                    // handle the download result
+                    if (err) {
+                        res.send(err);
+                    } else {
+                        //ここからyoutubeにアップロードする処理を組んでいく
+                        uploadFilenameOnThisServer = url_parts.query.filename;
+                        var uploadrequest = ytapi.videos.insert({
+                            resource: {
+                                // Video title and description
+                                snippet: {
+                                    title: "Testing YoutTube API NodeJS module",
+                                    description: "Test video upload via YouTube API"
                                 }
-                            });
+                                // I don't want to spam my subscribers
+                                ,
+                                status: {
+                                    privacyStatus: "private"
+                                }
+                            }
+                            // This is for the callback function
+                            ,
+                            part: "snippet,status"
 
-                        }
-                    });
+                            // Create the readable stream to upload the video
+                            ,
+                            media: {
+                                body: fs.createReadStream('./downloadFiles/' + url_parts.query.filename)
+                            }
+                        }, (err, data) => {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                fs.unlink('./downloadFiles/' + url_parts.query.filename, function(err) {
+                                    if (err) {
+                                        res.send(err);
+                                    } else {
+                                        console.log("Done.");
+                                        request('https://remixtreehackasong.mybluemix.net/insertDB/test/viewall', function(error, response, body) {
+                                            if (!error && response.statusCode == 200) {
+                                                var filteredArray = JSON.parse(body).rows.filter(function(elem) {
+                                                    return (elem.value.id == url_parts.query.treeId);
+                                                });
+                                                var targetElem = filteredArray[0].value;
+                                                targetElem.remixMoviePath = 'https://www.youtube.com/watch?v=' + data.id;
+                                                db.use('remixtree').bulk({
+                                                    docs: [targetElem]
+                                                }, function(er) {
+                                                    if (er) {
+                                                        throw er;
+                                                    }
 
 
-                    //---------------------------------------------
-                    // fs.readFile('./downloadFiles/' + url_parts.query.filename, function(err, data) {
-                    //     res.header({
-                    //         'Content-Type': mime.lookup('./downloadFiles/' + url_parts.query.filename)
-                    //     });
-                    //     fs.unlink('./downloadFiles/' + url_parts.query.filename, function(err) {
-                    //         if (err) {
-                    //             res.send(err);
-                    //         } else {
-                    //             res.send(data);
-                    //         }
-                    //     });
-                    // })
+                                                    console.log(data);
+                                                    console.log('update metadata');
+                                                    res.send("ok");
+                                                });
+                                            } else {
+                                                res.send(error);
+                                            }
+                                        })
 
-                }
-            });
+
+                                    }
+                                });
+
+                            }
+                        });
+
+
+
+
+                    }
+                });
+            }
+
         }
 
     });
@@ -432,15 +453,15 @@ router.get('/afterOAuth', function(req, res) {
         form: bodyobj
     }, function(error, httpResponse, body) {
         if (error) {
-                console.log(error);
-                res.send(error);
-            } else {
-                console.log("Got the tokens.");
+            console.log(error);
+            res.send(error);
+        } else {
+            console.log("Got the tokens.");
 
-                oauth.setCredentials(JSON.parse(body));
-                res.send(body);
-            }
-     })
+            oauth.setCredentials(JSON.parse(body));
+            res.send(body);
+        }
+    })
 
 });
 
@@ -508,90 +529,143 @@ router.post('/FromUpLoadForm', function(req, res) {
                         res.send(err);
                     });
                     writeStream.on('success', function(file) {
-                        fs.unlink('./uploadFiles/' + req.file.filename, function(err) {
+                        //------------------------------------------------
+                        var uploadrequest = ytapi.videos.insert({
+                            resource: {
+                                // Video title and description
+                                snippet: {
+                                    title: "Testing YoutTube API NodeJS module",
+                                    description: "USERMOVIE"
+                                }
+                                // I don't want to spam my subscribers
+                                ,
+                                status: {
+                                    privacyStatus: "private"
+                                }
+                            }
+                            // This is for the callback function
+                            ,
+                            part: "snippet,status"
+
+                            // Create the readable stream to upload the video
+                            ,
+                            media: {
+                                body: fs.createReadStream('./uploadFiles/' + req.file.filename)
+                            }
+                        }, (err, youtubeMetaData) => {
                             if (err) {
                                 res.send(err);
                             } else {
-                                //ここで元動画のアップロード完了
-                                sendingObject.userMovieFile = file;
-                                //コールバック地獄だけど気にしたら負け
-                                //コールバック地獄にならないいい書き方誰か教えて
-                                //ここから編集元youtube動画のアップロード
-                                var ytURL = req.body.youtubeURL;
-                                var video = ytdl(ytURL);
-                                var info_;
-                                video.on('info', function(info) {
-                                    info_ = info;
-                                    console.log(info);
-                                });
-                                video.pipe(fs.createWriteStream('./uploadFiles/' + '____buffer____'));
-                                video.on('end', function() {
-                                    var storage_option = {
-                                        container: 'Container1', // this can be either the name or an instance of container
-                                        remote: info_._filename, // name of the new file
-                                        contentType: mime.lookup('./uploadFiles/' + '____buffer____'), // optional mime type for the file, will attempt to auto-detect based on remote name
-                                        size: info_.size // size of the file
-                                    }
-                                    var readStream = fs.createReadStream('./uploadFiles/' + '____buffer____');
-                                    var writeStream = storageClient.upload(storage_option);
-                                    writeStream.on('error', function(err) {
+                                fs.unlink('./uploadFiles/' + req.file.filename, function(err) {
+                                    if (err) {
                                         res.send(err);
-                                    });
-                                    writeStream.on('success', function(file2) {
-                                        fs.unlink('./uploadFiles/' + '____buffer____', function(err) {
-                                            if (err) {
+                                    } else {
+                                        //ここで元動画のアップロード完了
+                                        sendingObject.userMovieFile = file;
+
+                                        //コールバック地獄だけど気にしたら負け
+                                        //コールバック地獄にならないいい書き方誰か教えて
+                                        //ここから編集元youtube動画のアップロード
+                                        var ytURL = req.body.youtubeURL;
+                                        var video = ytdl(ytURL);
+                                        var info_;
+                                        video.on('info', function(info) {
+                                            info_ = info;
+                                            console.log(info);
+                                        });
+                                        video.pipe(fs.createWriteStream('./uploadFiles/' + '____buffer____'));
+                                        video.on('end', function() {
+                                            var storage_option = {
+                                                container: 'Container1', // this can be either the name or an instance of container
+                                                remote: info_._filename, // name of the new file
+                                                contentType: mime.lookup('./uploadFiles/' + '____buffer____'), // optional mime type for the file, will attempt to auto-detect based on remote name
+                                                size: info_.size // size of the file
+                                            }
+                                            var readStream = fs.createReadStream('./uploadFiles/' + '____buffer____');
+                                            var writeStream = storageClient.upload(storage_option);
+                                            writeStream.on('error', function(err) {
                                                 res.send(err);
-                                            } else {
-                                                sendingObject.baseYoutubeMovieFile = file2;
-                                                //ここでyoutube動画もアップロード完了
-                                                //メタデータをDBに挿入するところに入る
-                                                var req_protocol = '';
-                                                if (!req.secure) {
-                                                    req_protocol = 'http://'
-                                                } else {
-                                                    req_protocol = 'https://'
-                                                }
-                                                request(req_protocol + req.headers.host + '/insertDB/test/viewStats', function(error, response, body) {
-                                                    if (!error && response.statusCode == 200) {
-                                                        var newMetaData = {};
-                                                        newMetaData.id = JSON.parse(body).rows[0].value.max + 1;
-                                                        newMetaData.parentId = req.body.parentId;
-                                                        newMetaData.childrenIds = [];
-                                                        newMetaData.title = req.body.title;
-                                                        console.log(req.body.tags);
-                                                        newMetaData.tags = JSON.stringify(info_.tags.concat(req.body.tags));
-                                                        newMetaData.genre = req.body.genre;
-                                                        newMetaData.tree_group = req.body.tree_group;
-                                                        request.post({
-                                                            url: req_protocol + req.headers.host + '/insertDB/insertNewData',
-                                                            form: newMetaData
-                                                        }, function(error, response, body) {
+                                            });
+                                            writeStream.on('success', function(file2) {
+                                                fs.unlink('./uploadFiles/' + '____buffer____', function(err) {
+                                                    if (err) {
+                                                        res.send(err);
+                                                    } else {
+                                                        sendingObject.baseYoutubeMovieFile = file2;
+                                                        //ここでyoutube動画もアップロード完了
+                                                        //メタデータをDBに挿入するところに入る
+                                                        var req_protocol = '';
+                                                        if (!req.secure) {
+                                                            req_protocol = 'http://'
+                                                        } else {
+                                                            req_protocol = 'https://'
+                                                        }
+                                                        request(req_protocol + req.headers.host + '/insertDB/test/viewStats', function(error, response, body) {
                                                             if (!error && response.statusCode == 200) {
-                                                                //ここから編集サーバーに通知を送信
-                                                                var requestToUploadFinishUrl = movieProcessingServerEndPoint;
-                                                                requestToUploadFinishUrl += '?movie_url=';
-                                                                requestToUploadFinishUrl += (http_protocol + http_host + http_port);
-                                                                requestToUploadFinishUrl += '/upload/test/getFile?filename=';
-                                                                requestToUploadFinishUrl += 'filename';
-                                                                res.send(sendingObject);
+                                                                var newMetaData = {};
+                                                                newMetaData.id = JSON.parse(body).rows[0].value.max + 1;
+                                                                newMetaData.parentId = req.body.parentId;
+                                                                newMetaData.childrenIds = [];
+                                                                newMetaData.title = req.body.title;
+                                                                console.log(req.body.tags);
+                                                                newMetaData.tags = JSON.stringify(info_.tags.concat(req.body.tags));
+                                                                newMetaData.genre = req.body.genre;
+                                                                newMetaData.tree_group = req.body.tree_group;
+                                                                newMetaData.youtubeUrl = 'https://www.youtube.com/watch?v=' + youtubeMetaData.id;
+                                                                newMetaData.thumbnail = youtubeMetaData.snippet.thumbnails.default.url;
+                                                                request.post({
+                                                                    url: req_protocol + req.headers.host + '/insertDB/insertNewData',
+                                                                    form: newMetaData
+                                                                }, function(error, response, body) {
+                                                                    if (!error && response.statusCode == 200) {
+                                                                        //ここから編集サーバーに通知を送信
+                                                                        if (requestToMovieServer) {
+                                                                            var requestToUploadFinishUrl = movieProcessingServerEndPoint;
+                                                                            requestToUploadFinishUrl += '?movie_url=';
+                                                                            requestToUploadFinishUrl += (http_protocol + http_host + http_port);
+                                                                            requestToUploadFinishUrl += '/upload/test/getFile?filename=';
+                                                                            requestToUploadFinishUrl += sendingObject.userMovieFile.name;
+                                                                            requestToUploadFinishUrl += '&base_movie_url=';
+                                                                            requestToUploadFinishUrl += (http_protocol + http_host + http_port);
+                                                                            requestToUploadFinishUrl += '/upload/test/getFile?filename=';
+                                                                            requestToUploadFinishUrl += sendingObject.baseYoutubeMovieFile.name;
+                                                                            requestToUploadFinishUrl += '&treeId=';
+                                                                            requestToUploadFinishUrl += newMetaData.id;
+
+                                                                            request(requestToUploadFinishUrl, function(error, httpResponse, body) {
+                                                                                if (!error && httpResponse.statusCode == 200) {
+                                                                                    res.send("successfully started movie processing");
+                                                                                } else {
+                                                                                    res.send("failed to start movie processing:" + JSON.stringify(error));
+                                                                                }
+                                                                            })
+                                                                        } else {
+                                                                            res.send(sendingObject);
+                                                                        }
+                                                                        //
+                                                                    } else {
+                                                                        res.send(error);
+                                                                    }
+                                                                })
                                                             } else {
                                                                 res.send(error);
                                                             }
-                                                        })
-                                                    } else {
-                                                        res.send(error);
+                                                        });
+                                                        //res.send(sendingObject);
                                                     }
-                                                });
-                                                //res.send(sendingObject);
-                                            }
+                                                })
+
+                                            });
+                                            readStream.pipe(writeStream);
+
                                         })
-
-                                    });
-                                    readStream.pipe(writeStream);
-
+                                    }
                                 })
+
                             }
-                        })
+                        });
+                        //------------------------------------------------
+
 
                     });
                     readStream.pipe(writeStream);

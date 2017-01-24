@@ -43,3 +43,4 @@ uploadFiles/*
 !uploadFiles/deploytestfile.txt
 downloadFiles/*
 !downloadFiles/readme.txt
+Sample/*

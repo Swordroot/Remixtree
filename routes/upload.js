@@ -49,8 +49,8 @@ if (typeof process.env.VCAP_SERVICES === 'undefined') {
     //-------------------------------------------------------------------------
     //ローカルで動かす場合は
     //動画編集サーバーのアップロード完了通知先のエンドポイントをここで設定してください
-    movieProcessingServerEndPoint = "http://movieProcessingServer/";
-    requestToMovieServer = false;
+    movieProcessingServerEndPoint = "http://remixtreeview.mybluemix.net/";
+    requestToMovieServer = true;
     //-------------------------------------------------------------------------
 } else {
     services = JSON.parse(process.env.VCAP_SERVICES);

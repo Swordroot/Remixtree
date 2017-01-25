@@ -49,8 +49,10 @@ app.use('/getTreeData', require('./routes/getTreeData'));
 
 app.use('/insertDB', require('./routes/insertDB'));
 
-//test
-//app.use('/upload',require('./routes/upload.js'))
+
+
+
+app.use('/upload',require('./routes/upload.js'))
 
 app.get('/tree/play', function(req, res){
   var template = fs.readFileSync(__dirname + '/public/tree/play.ejs', 'utf-8');

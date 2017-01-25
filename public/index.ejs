@@ -10,6 +10,28 @@
       function init() {
         // Stageオブジェクトを作成。表示リストのルートになります
         var stage = new createjs.Stage("canvas");
+        stage.addEventListener('click', function(event){
+          location.href = "/tree"
+        });
+
+        // タッチ操作をサポートしているブラウザーならば
+        if (createjs.Touch.isSupported() == true) {
+          // タッチ操作を有効にします。
+          createjs.Touch.enable(stage);
+        }
+        stage.onClick = function(e) {
+          console.log(e);
+        }
+
+        // 画像を作成します
+        var bitmap = new createjs.Bitmap("images/remixtree_top.png");
+        function adjustBitmapToWindowSize(){
+          var scaleRatio = Math.min(window.innerWidth / bitmap.getBounds().width, window.innerHeight / bitmap.getBounds().height);
+          bitmap.scaleX = scaleRatio;
+          bitmap.scaleY = scaleRatio;
+          bitmap.x = (window.innerWidth - bitmap.getBounds().width * scaleRatio) / 2
+          bitmap.y = (window.innerHeight - bitmap.getBounds().height * scaleRatio) / 2
+        }
 
         // リサイズイベントを検知してリサイズ処理を実行
         window.addEventListener("resize", handleResize);
@@ -23,15 +45,10 @@
           // Canvas要素の大きさを画面幅・高さに合わせる
           stage.canvas.width = w;
           stage.canvas.height = h;
+          adjustBitmapToWindowSize();
           // 画面更新する
           stage.update();
         }
-
-        // 画像を作成します
-        var bitmap = new createjs.Bitmap("images/remixtree_top.png");
-        var scaleRatio = Math.min(window.innerWidth / bitmap.getBounds().width, window.innerHeight / bitmap.getBounds().height);
-        bitmap.scaleX = scaleRatio;
-        bitmap.scaleY = scaleRatio;
 
         stage.addChild(bitmap);
         // tick イベントを監視します

@@ -384,7 +384,7 @@ router.get('/notifyProcessingComplete', function(req, res) {
                             media: {
                                 body: fs.createReadStream('./downloadFiles/' + url_parts.query.filename)
                             }
-                        }, (err, data) => {
+                        }, function(err, data) {
                             if (err) {
                                 res.send(err);
                             } else {
@@ -552,7 +552,7 @@ router.post('/FromUpLoadForm', function(req, res) {
                             media: {
                                 body: fs.createReadStream('./uploadFiles/' + req.file.filename)
                             }
-                        }, (err, youtubeMetaData) => {
+                        }, function(err, youtubeMetaData) {
                             if (err) {
                                 res.send(err);
                             } else {

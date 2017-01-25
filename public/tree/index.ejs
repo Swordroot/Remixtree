@@ -8,8 +8,63 @@
   <script src="/javascript/createjs.min.js"></script>
 </head>
 <body>
-<canvas id="tree_node" width="960" height="600"></canvas>
 <script>
+    var width = 760;
+    var height = 450;
+ 
+    var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("transform","translate(50,50)");//ここがツリーの左上になる。
+ 
+    var tree = d3.tree()
+    .size([400,400]) // .size()でツリー全体のサイズを決める。
+    .children(children); // children()で入れ子のための名前を指定する。
+ 
+    function children(d) {
+      return d["種類"];
+    }
+ 
+    d3.json("kinoko_takenoko.json", function(data) {
+ 
+    // tree.nodesで、childrenのname分だけ、name/children/parent/depth/x/yを作る。
+    var nodes = tree.nodes(data);
+ 
+    // nodesから、diagonal用データ構造を作る　＝　[{ source:{x:10,y:20}, target:{x:100,y:200} }]など
+    var links = tree.links(nodes);
+ 
+    // 円とテキストを入れるノードのコンテナg。
+    var node = svg.selectAll(".node")
+    .data(nodes) //nodesの数分gを作る。
+    .enter()
+    .append("g")
+    .attr("class","node")
+    .attr("transform", function(d){ return "translate("+ d.y + "," + d.x + ")";}); //ノードの場所まで移動。横向きにするためにxとyを逆に。
+ 
+    node.append("circle")
+    .attr("r", 4)
+    .attr("fill","steelblue");
+ 
+    node.append("text")
+    .text(function(d) { return d.name})
+    .attr("y",-5);
+ 
+    var diagonal = d3.svg.diagonal()
+    .projection(function(d){ return [d.y,d.x];}); // 横向きにするためにxとyを逆に。
+ 
+    //linksで作ったsource、targetでdiagonal曲線を作る。
+    svg.selectAll(".link")
+    .data(links)
+    .enter()
+    .append("path")
+    .attr("class","link")
+    .attr("fill", "none")
+    .attr("stroke", "red")
+    .attr("d",diagonal);
+ 
+    });
+ 
+/*
 var canvas = document.querySelector("canvas"),
     context = canvas.getContext("2d"),
     width = canvas.width,
@@ -92,6 +147,7 @@ function drawNode(d) {
 function jumpTo(){
   location.href = "/tree/play";
 }
+*/
 
 </script>
 </body>

@@ -31,7 +31,8 @@ var i = 0,
 // declares a tree layout and assigns the size
 var treemap = d3.tree().size([height, width]);
 
-d3.json("kinoko_takenoko.json", function(error, graph) {
+d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, graph) {
+  console.log(graph);
   if (error) throw error;
   // Assigns parent, children, height, depth
   root = d3.hierarchy(graph, function(d) { return d.children; });

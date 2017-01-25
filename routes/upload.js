@@ -328,7 +328,7 @@ router.get('/youtubeAuth', function(req, res) {
             scope: ["https://www.googleapis.com/auth/youtube.upload"]
         }), function(err, htmlResponse, body) {
             if (!err && htmlResponse.statusCode == 200) {
-                res.send("Successfully Authenticated");
+                res.send(body);
             } else {
                 res.send(err);
             }
@@ -459,7 +459,7 @@ router.get('/afterOAuth', function(req, res) {
             console.log("Got the tokens.");
 
             oauth.setCredentials(JSON.parse(body));
-            res.send(body);
+            res.send("Successfully Authenticated");
         }
     })
 

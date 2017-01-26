@@ -35,7 +35,7 @@ function createViz() {
     .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
 }
 
-d3.json("kinoko_takenoko.json", function(error, data) {
+d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
   var parsedData = data[0] || {};
   var root = d3.hierarchy(parsedData, function(d) { return d.children; });
   tree(root);
@@ -69,7 +69,9 @@ d3.json("kinoko_takenoko.json", function(error, data) {
 
   function createImage() {
     return node.append("image")
-      .attr("xlink:href", function(d) { return "/images/thumnails/neba.png"; })
+      .attr("xlink:href", function(d) {
+        return d.data.thumbnail;
+      })
       .attr("x", "-30px")
       .attr("y", "-30px")
       .attr("width", "60px")

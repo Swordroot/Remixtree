@@ -43,7 +43,6 @@ d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
   var link = createLink();
   var node = createNode();
   var circle = createImage();
-  var text = createText();
 
   function createLink() {
     return svg.selectAll(".link")
@@ -80,14 +79,6 @@ d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
       .on("click", function(d){
         location.href = "https://remixtreeview.mybluemix.net/watch.html?&v=0E00Zuayv9Q&t=14.9&v=5Ens7TZzgG0&t=15.3&v=_kNZeOupQK8&t=13.8&v=hcpI9auZmpI&t=6.9&v=AdpD_RRft2s&t=5&v=fjV91oI5cL0&t=0&v=Jn1f8Uocf1E&t=12.3&v=b1iNDME9oZM&t=1.1&v=ytbYLaZNVzk&t=2.4"
       });
-  }
-
-  function createText() {
-    return node.append("text")
-    .attr("dy", 3)
-    .attr("x", function(d) { return d.children ? -8 : 8; })
-    .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-    .text(function(d) { return d.data.name; });
   }
 });
 /*

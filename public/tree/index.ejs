@@ -65,7 +65,11 @@ d3.json("kinoko_takenoko.json", function(error, data) {
       .attr("x", "-30px")
       .attr("y", "-30px")
       .attr("width", "60px")
-      .attr("height", "60px");
+      .attr("height", "60px")
+      .on("click", function(d){
+        console.log(d);
+        location.href = "http://google.co.jp/"
+      });
   }
 
   function createText() {

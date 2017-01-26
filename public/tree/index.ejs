@@ -32,7 +32,7 @@ d3.json("kinoko_takenoko.json", function(error, data) {
   tree(root);
   var link = createLink();
   var node = createNode();
-  var circle = createCircle();
+  var circle = createImage();
   var text = createText();
 
   function createLink() {
@@ -56,9 +56,13 @@ d3.json("kinoko_takenoko.json", function(error, data) {
       .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
     }
 
-  function createCircle() {
-    return node.append("circle")
-    .attr("r", 2.5);
+  function createImage() {
+    return node.append("image")
+      .attr("xlink:href", function(d) { return "/images/thumnails/neba.png"; })
+      .attr("x", "-30px")
+      .attr("y", "-30px")
+      .attr("width", "60px")
+      .attr("height", "60px");
   }
 
   function createText() {

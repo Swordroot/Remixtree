@@ -28,7 +28,8 @@ function createViz() {
 }
 
 d3.json("kinoko_takenoko.json", function(error, data) {
-  var root = d3.hierarchy(data, function(d) { return d.children; });
+  var parsedData = data[0] || {};
+  var root = d3.hierarchy(parsedData, function(d) { return d.children; });
   tree(root);
   var link = createLink();
   var node = createNode();

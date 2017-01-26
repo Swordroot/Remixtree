@@ -35,7 +35,8 @@ function createViz() {
     .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
 }
 
-d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
+//d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
+d3.json("getTreeData.json", function(error, data) {
   var parsedData = data[0] || {};
   var root = d3.hierarchy(parsedData, function(d) { return d.children; });
   tree(root);

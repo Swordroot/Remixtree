@@ -2,7 +2,9 @@
 <head>
   <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
   <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/jquery-ui.min.css" rel="stylesheet">
   <script src="/javascript/jquery-3.1.1.min.js"></script>
+  <script src="/javascript/jquery-ui.min.js"></script>
   <script src="/javascript/bootstrap.min.js"></script>
   <script src="/javascript/d3.min.js"></script>
   <script src="/javascript/createjs.min.js"></script>
@@ -16,6 +18,7 @@
   </style>
 </head>
 <body>
+  <div id="dialog" title="メニュー">この動画を視聴しますか?それともRemixした動画を投稿しますか?</div>
 <script>
 // Set the dimensions and margins of the diagram
 var margin = {top: 90, right: 30, bottom: 90, left: 20};
@@ -35,8 +38,8 @@ function createViz() {
     .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")");
 }
 
-d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
-//d3.json("getTreeData.json", function(error, data) {
+//d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
+d3.json("getTreeData.json", function(error, data) {
   var parsedData = data[0] || {};
   var root = d3.hierarchy(parsedData, function(d) { return d.children; });
   tree(root);
@@ -77,7 +80,19 @@ d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
       .attr("width", "90px")
       .attr("height", "120px")
       .on("click", function(d){
-        location.href = "https://remixtreeview.mybluemix.net/watch.html?&v=0E00Zuayv9Q&t=14.9&v=5Ens7TZzgG0&t=15.3&v=_kNZeOupQK8&t=13.8&v=hcpI9auZmpI&t=6.9&v=AdpD_RRft2s&t=5&v=fjV91oI5cL0&t=0&v=Jn1f8Uocf1E&t=12.3&v=b1iNDME9oZM&t=1.1&v=ytbYLaZNVzk&t=2.4"
+        console.log(d);
+        $("#dialog").dialog({
+          modal: true,
+          buttons: {
+　　　　     "動画を見る": function(){
+              location.href = "https://remixtreeview.mybluemix.net/watch.html?&v=0E00Zuayv9Q&t=14.9&v=5Ens7TZzgG0&t=15.3&v=_kNZeOupQK8&t=13.8&v=hcpI9auZmpI&t=6.9&v=AdpD_RRft2s&t=5&v=fjV91oI5cL0&t=0&v=Jn1f8Uocf1E&t=12.3&v=b1iNDME9oZM&t=1.1&v=ytbYLaZNVzk&t=2.4"
+     　　　　},
+            "動画を投稿する":function(){
+  　　　　     $(this).dialog('close');
+     　　　　}
+          }
+        });
+//        location.href = "https://remixtreeview.mybluemix.net/watch.html?&v=0E00Zuayv9Q&t=14.9&v=5Ens7TZzgG0&t=15.3&v=_kNZeOupQK8&t=13.8&v=hcpI9auZmpI&t=6.9&v=AdpD_RRft2s&t=5&v=fjV91oI5cL0&t=0&v=Jn1f8Uocf1E&t=12.3&v=b1iNDME9oZM&t=1.1&v=ytbYLaZNVzk&t=2.4"
       });
   }
 });

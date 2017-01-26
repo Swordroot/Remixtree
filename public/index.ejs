@@ -21,7 +21,7 @@
         }
 
         // 画像を作成します
-        var bitmap = new createjs.Bitmap("images/remixtree_top.png");
+        var bitmap = new createjs.Bitmap("/images/remixtree_top.png");
         function adjustBitmapToWindowSize(){
           var scaleRatio = Math.min(window.innerWidth / bitmap.getBounds().width, window.innerHeight / bitmap.getBounds().height);
           bitmap.scaleX = scaleRatio;

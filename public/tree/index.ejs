@@ -54,7 +54,6 @@ d3.json("getTreeData.json", function(error, data) {
     .attr("class", "link")
     .style("stroke", function(d) { return "blue"; })
     .attr("d", function(d) {
-      console.log(d);
       return "M" + d.x + "," + d.y / 2
       + "C" + (d.x + d.parent.x) / 2 + "," + d.y / 2
       + " " + (d.x + d.parent.x) / 2 + "," + d.parent.y / 2
@@ -73,7 +72,9 @@ d3.json("getTreeData.json", function(error, data) {
   function createImage() {
     return node.append("image")
       .attr("xlink:href", function(d) {
-        return d.data.thumbnail;
+        var youtubeId = d.data.thumbnail.replace("https://i.ytimg.com/vi/", "").replace("/default.jpg", "");
+        return "/images/ppap_thumbnail/" + youtubeId + ".jpg";
+//        return d.data.thumbnail;
       })
       .attr("x", "-45px")
       .attr("y", "-60px")
@@ -88,6 +89,7 @@ d3.json("getTreeData.json", function(error, data) {
               location.href = "https://remixtreeview.mybluemix.net/watch.html?&v=0E00Zuayv9Q&t=14.9&v=5Ens7TZzgG0&t=15.3&v=_kNZeOupQK8&t=13.8&v=hcpI9auZmpI&t=6.9&v=AdpD_RRft2s&t=5&v=fjV91oI5cL0&t=0&v=Jn1f8Uocf1E&t=12.3&v=b1iNDME9oZM&t=1.1&v=ytbYLaZNVzk&t=2.4"
      　　　　},
             "動画を投稿する":function(){
+//              location.href = "/upload"
   　　　　     $(this).dialog('close');
      　　　　}
           }

@@ -52,7 +52,7 @@ app.use('/insertDB', require('./routes/insertDB'));
 
 
 
-app.use('/upload',require('./routes/upload.js'))
+//app.use('/upload',require('./routes/upload.js'))
 
 app.get('/tree/play', function(req, res){
   var template = fs.readFileSync(__dirname + '/public/tree/play.ejs', 'utf-8');

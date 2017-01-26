@@ -72,10 +72,10 @@ d3.json("/getTreeData/getTreeJSONFromId?treeId=1", function(error, data) {
       .attr("xlink:href", function(d) {
         return d.data.thumbnail;
       })
-      .attr("x", "-30px")
-      .attr("y", "-30px")
-      .attr("width", "60px")
-      .attr("height", "60px")
+      .attr("x", "-45px")
+      .attr("y", "-60px")
+      .attr("width", "90px")
+      .attr("height", "120px")
       .on("click", function(d){
         console.log(d);
         location.href = "http://google.co.jp/"
